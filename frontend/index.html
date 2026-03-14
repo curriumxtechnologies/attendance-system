@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>EduAttend · Smart Attendance Management</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed-dim": "#bccac5",
+              "primary-container": "#1f7a63",
+              "surface-container-low": "#f6f3f2",
+              "on-background": "#1b1b1c",
+              "on-primary-fixed": "#002018",
+              "on-error": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "tertiary-fixed-dim": "#ffb4a8",
+              "on-tertiary-fixed": "#3c0804",
+              "error-container": "#ffdad6",
+              "outline-variant": "#bec9c3",
+              "surface-variant": "#e5e2e1",
+              "tertiary-container": "#a3574c",
+              "on-primary": "#ffffff",
+              "secondary-container": "#d8e6e1",
+              "surface-container-high": "#eae7e7",
+              "tertiary-fixed": "#ffdad5",
+              "on-primary-fixed-variant": "#005140",
+              "on-tertiary-fixed-variant": "#74332a",
+              "surface-dim": "#dcd9d9",
+              "primary-fixed-dim": "#82d6bb",
+              "on-tertiary-container": "#ffebe8",
+              "on-secondary-container": "#5a6763",
+              error: "#ba1a1a",
+              "on-secondary-fixed": "#121e1b",
+              "on-secondary-fixed-variant": "#3d4946",
+              background: "#fcf9f8",
+              "primary-fixed": "#9ef3d7",
+              secondary: "#54615d",
+              "inverse-on-surface": "#f3f0ef",
+              surface: "#fcf9f8",
+              tertiary: "#854036",
+              "surface-bright": "#fcf9f8",
+              primary: "#00604c",
+              "surface-tint": "#016b55",
+              "on-surface": "#1b1b1c",
+              "inverse-primary": "#82d6bb",
+              "surface-container-highest": "#e5e2e1",
+              "secondary-fixed": "#d8e6e1",
+              outline: "#6e7a74",
+              "on-error-container": "#93000a",
+              "on-secondary": "#ffffff",
+              "surface-container-lowest": "#ffffff",
+              "on-surface-variant": "#3e4945",
+              "surface-container": "#f0eded",
+              "inverse-surface": "#303030",
+              "on-primary-container": "#b1ffe4",
+            },
+            fontFamily: {
+              headline: ["Manrope", "sans-serif"],
+              body: ["Inter", "sans-serif"],
+              label: ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "1.5rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+      }
+
+      h1,
+      h2,
+      h3,
+      .display-font {
+        font-family: "Manrope", sans-serif;
+      }
+
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+        vertical-align: middle;
+      }
+
+      .soft-shadow {
+        box-shadow: 0 12px 32px -4px rgba(27, 27, 28, 0.06);
+      }
+
+      .glass-nav {
+        background: rgba(255, 255, 255, 0.82);
+        backdrop-filter: blur(14px);
+      }
+
+      .hero-glow {
+        background:
+          radial-gradient(
+            circle at top left,
+            rgba(130, 214, 187, 0.22),
+            transparent 35%
+          ),
+          radial-gradient(
+            circle at bottom right,
+            rgba(31, 122, 99, 0.12),
+            transparent 30%
+          );
+      }
+
+      .grid-accent {
+        background-image:
+          linear-gradient(rgba(190, 201, 195, 0.15) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(190, 201, 195, 0.15) 1px, transparent 1px);
+        background-size: 28px 28px;
+      }
+    </style>
+  </head>
+
+  <body class="bg-background text-on-surface overflow-x-hidden">
+    <!-- Header -->
+    <header
+      class="sticky top-0 z-50 glass-nav border-b border-outline-variant/10"
+    >
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 h-20 flex items-center justify-between"
+      >
+        <a href="index.html" class="flex items-center gap-4">
+          <div
+            class="w-11 h-11 rounded-xl bg-primary flex items-center justify-center text-on-primary soft-shadow"
+          >
+            <span class="material-symbols-outlined">school</span>
+          </div>
+          <div>
+            <p class="text-xs text-on-surface-variant">University Portal</p>
+          </div>
+        </a>
+
+        <nav class="hidden md:flex items-center gap-2">
+          <a
+            href="#features"
+            class="px-4 py-2 rounded-full text-sm font-medium text-on-surface-variant hover:bg-surface-container-low transition-all"
+            >Features</a
+          >
+          <a
+            href="#how-it-works"
+            class="px-4 py-2 rounded-full text-sm font-medium text-on-surface-variant hover:bg-surface-container-low transition-all"
+            >How it works</a
+          >
+          <a
+            href="#overview"
+            class="px-4 py-2 rounded-full text-sm font-medium text-on-surface-variant hover:bg-surface-container-low transition-all"
+            >Overview</a
+          >
+          <a
+            href="login.html"
+            class="ml-2 px-5 py-2.5 rounded-full bg-primary text-on-primary text-sm font-semibold hover:bg-primary-container transition-all"
+            >Open Dashboard</a
+          >
+        </nav>
+
+        <a
+          href="login.html"
+          class="md:hidden w-11 h-11 rounded-full bg-primary text-on-primary flex items-center justify-center"
+          aria-label="Open dashboard"
+        >
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </a>
+      </div>
+    </header>
+
+    <main>
+      <!-- Hero -->
+      <section class="relative overflow-hidden hero-glow grid-accent">
+        <div
+          class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 py-16 sm:py-20 lg:py-24"
+        >
+          <div class="grid lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+            <div class="space-y-7">
+              <div
+                class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-fixed text-on-primary-fixed-variant text-sm font-semibold"
+              >
+                <span class="material-symbols-outlined text-[18px]"
+                  >verified</span
+                >
+                Smart attendance tracking for lecturers
+              </div>
+
+              <div class="space-y-4">
+                <h2
+                  class="text-4xl sm:text-5xl lg:text-6xl font-headline font-extrabold tracking-tight leading-tight text-on-surface"
+                >
+                  Manage classroom attendance with
+                  <span class="text-primary">clarity</span> and speed.
+                </h2>
+                <p
+                  class="text-base sm:text-lg text-on-surface-variant max-w-2xl leading-relaxed"
+                >
+                  This system helps lecturers mark attendance digitally, review
+                  class records, and identify students below the 70% threshold
+                  from one clean university portal.
+                </p>
+              </div>
+
+              <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                <a
+                  href="login.html"
+                  class="inline-flex items-center justify-center gap-3 px-7 py-4 rounded-xl bg-primary text-on-primary font-semibold hover:bg-primary-container transition-all soft-shadow"
+                >
+                  <span class="material-symbols-outlined">dashboard</span>
+                  Go to Dashboard
+                </a>
+              </div>
+
+              <div
+                class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2"
+                id="overview"
+              >
+                <div
+                  class="bg-surface-container-lowest rounded-xl p-5 soft-shadow"
+                >
+                  <h3
+                    class="text-2xl font-headline font-extrabold text-primary"
+                  >
+                    4
+                  </h3>
+                  <p class="text-sm text-on-surface-variant mt-1">
+                    Core lecturer tools
+                  </p>
+                </div>
+                <div
+                  class="bg-surface-container-lowest rounded-xl p-5 soft-shadow"
+                >
+                  <h3
+                    class="text-2xl font-headline font-extrabold text-primary"
+                  >
+                    70%
+                  </h3>
+                  <p class="text-sm text-on-surface-variant mt-1">
+                    Eligibility threshold tracking
+                  </p>
+                </div>
+                <div
+                  class="bg-surface-container-lowest rounded-xl p-5 soft-shadow"
+                >
+                  <h3
+                    class="text-2xl font-headline font-extrabold text-primary"
+                  >
+                    1
+                  </h3>
+                  <p class="text-sm text-on-surface-variant mt-1">
+                    Simple lecturer-focused workflow
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Hero preview card -->
+            <div class="relative">
+              <div
+                class="bg-surface-container-lowest rounded-[2rem] p-4 sm:p-5 soft-shadow border border-outline-variant/10"
+              >
+                <div
+                  class="bg-surface rounded-[1.5rem] overflow-hidden border border-outline-variant/10"
+                >
+                  <div
+                    class="px-4 sm:px-6 py-4 border-b border-outline-variant/10 flex items-center justify-between"
+                  >
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary"
+                      >
+                        <span class="material-symbols-outlined">school</span>
+                      </div>
+                      <div>
+                        <p class="font-semibold text-on-surface">
+                          Academic Overview
+                        </p>
+                        <p class="text-xs text-on-surface-variant">
+                          Attendance monitoring dashboard
+                        </p>
+                      </div>
+                    </div>
+                    <span
+                      class="px-3 py-1.5 rounded-full bg-primary-fixed text-on-primary-fixed-variant text-xs font-bold"
+                      >Active</span
+                    >
+                  </div>
+
+                  <div class="p-4 sm:p-6 space-y-5">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      <div
+                        class="bg-surface-container-low rounded-xl p-4 border border-outline-variant/10"
+                      >
+                        <p
+                          class="text-xs uppercase tracking-wider text-on-surface-variant font-bold"
+                        >
+                          Courses
+                        </p>
+                        <h3 class="text-3xl font-headline font-extrabold mt-2">
+                          4
+                        </h3>
+                      </div>
+                      <div
+                        class="bg-surface-container-low rounded-xl p-4 border border-outline-variant/10"
+                      >
+                        <p
+                          class="text-xs uppercase tracking-wider text-on-surface-variant font-bold"
+                        >
+                          Students
+                        </p>
+                        <h3 class="text-3xl font-headline font-extrabold mt-2">
+                          120
+                        </h3>
+                      </div>
+                      <div
+                        class="bg-error-container/30 rounded-xl p-4 border border-error/10"
+                      >
+                        <p
+                          class="text-xs uppercase tracking-wider text-on-error-container font-bold"
+                        >
+                          Below 70%
+                        </p>
+                        <h3
+                          class="text-3xl font-headline font-extrabold mt-2 text-error"
+                        >
+                          8
+                        </h3>
+                      </div>
+                    </div>
+
+                    <div
+                      class="bg-surface-container-low rounded-2xl p-4 sm:p-5 space-y-3"
+                    >
+                      <div class="flex items-center justify-between">
+                        <h3 class="font-headline font-bold">
+                          Recent Attendance Activity
+                        </h3>
+                        <a
+                          href="attendance-records.html"
+                          class="text-sm font-semibold text-primary"
+                          >View all</a
+                        >
+                      </div>
+
+                      <div class="space-y-2">
+                        <div
+                          class="flex items-center justify-between gap-3 bg-surface-container-lowest rounded-xl px-4 py-3"
+                        >
+                          <div class="flex items-center gap-3 min-w-0">
+                            <div
+                              class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center font-bold shrink-0"
+                            >
+                              MK
+                            </div>
+                            <div class="min-w-0">
+                              <p class="font-semibold truncate">
+                                Benison Faithful
+                              </p>
+                              <p
+                                class="text-xs text-on-surface-variant truncate"
+                              >
+                                Intro to Macroeconomics
+                              </p>
+                            </div>
+                          </div>
+                          <span
+                            class="px-3 py-1.5 rounded-full bg-primary-fixed text-on-primary-fixed-variant text-xs font-bold shrink-0"
+                            >Present</span
+                          >
+                        </div>
+
+                        <div
+                          class="flex items-center justify-between gap-3 bg-surface-container-lowest rounded-xl px-4 py-3"
+                        >
+                          <div class="flex items-center gap-3 min-w-0">
+                            <div
+                              class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center font-bold shrink-0"
+                            >
+                              LS
+                            </div>
+                            <div class="min-w-0">
+                              <p class="font-semibold truncate">
+                                Tomiwa Olukunle
+                              </p>
+                              <p
+                                class="text-xs text-on-surface-variant truncate"
+                              >
+                                Digital Marketing 101
+                              </p>
+                            </div>
+                          </div>
+                          <span
+                            class="px-3 py-1.5 rounded-full bg-error-container text-on-error-container text-xs font-bold shrink-0"
+                            >Absent</span
+                          >
+                        </div>
+
+                        <div
+                          class="flex items-center justify-between gap-3 bg-surface-container-lowest rounded-xl px-4 py-3"
+                        >
+                          <div class="flex items-center gap-3 min-w-0">
+                            <div
+                              class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center font-bold shrink-0"
+                            >
+                              EM
+                            </div>
+                            <div class="min-w-0">
+                              <p class="font-semibold truncate">
+                                Favor Davidson
+                              </p>
+                              <p
+                                class="text-xs text-on-surface-variant truncate"
+                              >
+                                Intro to Macroeconomics
+                              </p>
+                            </div>
+                          </div>
+                          <span
+                            class="px-3 py-1.5 rounded-full bg-primary-fixed text-on-primary-fixed-variant text-xs font-bold shrink-0"
+                            >Present</span
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="hidden xl:block absolute -bottom-6 -left-6 bg-primary text-on-primary rounded-2xl px-5 py-4 soft-shadow"
+              >
+                <p
+                  class="text-xs uppercase tracking-wider opacity-80 font-bold"
+                >
+                  Lecturer Portal
+                </p>
+                <p class="font-semibold mt-1">
+                  Fast, simple, and attendance-focused
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features -->
+      <section id="features" class="py-16 sm:py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
+          <div class="max-w-2xl mb-10">
+            <h2
+              class="text-3xl sm:text-4xl font-headline font-bold tracking-tight"
+            >
+              Everything needed for a simple attendance workflow
+            </h2>
+            <p class="mt-3 text-on-surface-variant text-base sm:text-lg">
+              Designed around the exact lecturer flow: select a course, mark
+              attendance, review records, and monitor 70% eligibility.
+            </p>
+          </div>
+
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 sm:gap-6"
+          >
+            <div
+              class="bg-surface-container-lowest rounded-2xl p-6 soft-shadow"
+            >
+              <div
+                class="w-12 h-12 rounded-xl bg-primary-container/10 text-primary flex items-center justify-center mb-5"
+              >
+                <span class="material-symbols-outlined">dashboard</span>
+              </div>
+              <h3 class="text-xl font-headline font-bold">
+                Dashboard Overview
+              </h3>
+              <p class="mt-2 text-sm text-on-surface-variant leading-relaxed">
+                See total courses, total students, and students below the
+                attendance requirement at a glance.
+              </p>
+            </div>
+
+            <div
+              class="bg-surface-container-lowest rounded-2xl p-6 soft-shadow"
+            >
+              <div
+                class="w-12 h-12 rounded-xl bg-primary-container/10 text-primary flex items-center justify-center mb-5"
+              >
+                <span class="material-symbols-outlined">fact_check</span>
+              </div>
+              <h3 class="text-xl font-headline font-bold">Mark Attendance</h3>
+              <p class="mt-2 text-sm text-on-surface-variant leading-relaxed">
+                Select a course and mark each student present or absent using a
+                clean, lecturer-friendly interface.
+              </p>
+            </div>
+
+            <div
+              class="bg-surface-container-lowest rounded-2xl p-6 soft-shadow"
+            >
+              <div
+                class="w-12 h-12 rounded-xl bg-primary-container/10 text-primary flex items-center justify-center mb-5"
+              >
+                <span class="material-symbols-outlined">analytics</span>
+              </div>
+              <h3 class="text-xl font-headline font-bold">
+                Attendance Records
+              </h3>
+              <p class="mt-2 text-sm text-on-surface-variant leading-relaxed">
+                Review course-based attendance history and quickly identify
+                which students were present or absent.
+              </p>
+            </div>
+
+            <div
+              class="bg-surface-container-lowest rounded-2xl p-6 soft-shadow"
+            >
+              <div
+                class="w-12 h-12 rounded-xl bg-error/10 text-error flex items-center justify-center mb-5"
+              >
+                <span class="material-symbols-outlined">rule</span>
+              </div>
+              <h3 class="text-xl font-headline font-bold">Eligibility Check</h3>
+              <p class="mt-2 text-sm text-on-surface-variant leading-relaxed">
+                Automatically separate eligible and not-eligible students based
+                on the 70% attendance rule.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- How it works -->
+      <section
+        id="how-it-works"
+        class="py-16 sm:py-20 bg-surface-container-low/50"
+      >
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
+          <div class="max-w-2xl mb-10">
+            <h2
+              class="text-3xl sm:text-4xl font-headline font-bold tracking-tight"
+            >
+              How It works
+            </h2>
+            <p class="mt-3 text-on-surface-variant text-base sm:text-lg">
+              A straightforward process tailored for university lecturers.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-5">
+            <div
+              class="bg-surface-container-lowest rounded-2xl p-6 soft-shadow"
+            >
+              <span
+                class="inline-flex w-10 h-10 rounded-full bg-primary text-on-primary items-center justify-center font-bold mb-4"
+                >1</span
+              >
+              <h3 class="font-headline font-bold text-lg">Login</h3>
+              <p class="mt-2 text-sm text-on-surface-variant">
+                Lecturer accesses the university portal.
+              </p>
+            </div>
+
+            <div
+              class="bg-surface-container-lowest rounded-2xl p-6 soft-shadow"
+            >
+              <span
+                class="inline-flex w-10 h-10 rounded-full bg-primary text-on-primary items-center justify-center font-bold mb-4"
+                >2</span
+              >
+              <h3 class="font-headline font-bold text-lg">Select Course</h3>
+              <p class="mt-2 text-sm text-on-surface-variant">
+                Choose the course for that class session.
+              </p>
+            </div>
+
+            <div
+              class="bg-surface-container-lowest rounded-2xl p-6 soft-shadow"
+            >
+              <span
+                class="inline-flex w-10 h-10 rounded-full bg-primary text-on-primary items-center justify-center font-bold mb-4"
+                >3</span
+              >
+              <h3 class="font-headline font-bold text-lg">View Students</h3>
+              <p class="mt-2 text-sm text-on-surface-variant">
+                The system displays the class list.
+              </p>
+            </div>
+
+            <div
+              class="bg-surface-container-lowest rounded-2xl p-6 soft-shadow"
+            >
+              <span
+                class="inline-flex w-10 h-10 rounded-full bg-primary text-on-primary items-center justify-center font-bold mb-4"
+                >4</span
+              >
+              <h3 class="font-headline font-bold text-lg">Mark Status</h3>
+              <p class="mt-2 text-sm text-on-surface-variant">
+                Click present or absent for each student.
+              </p>
+            </div>
+
+            <div
+              class="bg-surface-container-lowest rounded-2xl p-6 soft-shadow"
+            >
+              <span
+                class="inline-flex w-10 h-10 rounded-full bg-primary text-on-primary items-center justify-center font-bold mb-4"
+                >5</span
+              >
+              <h3 class="font-headline font-bold text-lg">Save Record</h3>
+              <p class="mt-2 text-sm text-on-surface-variant">
+                Attendance is stored and eligibility is tracked.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA section -->
+      <section class="py-16 sm:py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
+          <div
+            class="bg-primary text-on-primary rounded-[2rem] p-8 sm:p-10 lg:p-12 soft-shadow overflow-hidden relative"
+          >
+            <div
+              class="absolute inset-0 opacity-10"
+              style="
+                background-image:
+                  linear-gradient(
+                    rgba(255, 255, 255, 0.2) 1px,
+                    transparent 1px
+                  ),
+                  linear-gradient(
+                    90deg,
+                    rgba(255, 255, 255, 0.2) 1px,
+                    transparent 1px
+                  );
+                background-size: 24px 24px;
+              "
+            ></div>
+
+            <div
+              class="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8"
+            >
+              <div class="max-w-2xl">
+                <h2
+                  class="text-3xl sm:text-4xl font-headline font-bold tracking-tight"
+                >
+                  Ready to start managing attendance digitally?
+                </h2>
+                <p class="mt-3 text-on-primary/80 text-base sm:text-lg">
+                  Open the lecturer portal and start using the System dashboard,
+                  attendance records, eligibility tracking, and settings pages.
+                </p>
+              </div>
+
+              <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                <a
+                  href="login.html"
+                  class="inline-flex items-center justify-center gap-3 px-7 py-4 rounded-xl bg-surface text-primary font-semibold hover:bg-surface-container-lowest transition-all"
+                >
+                  <span class="material-symbols-outlined">dashboard</span>
+                  Open Dashboard
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

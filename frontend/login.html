@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>EduAttend · Lecturer Login</title>
+
+    <!-- Tailwind + plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind config (preserved) -->
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed-dim": "#bccac5",
+              "primary-container": "#1f7a63",
+              "surface-container-low": "#f6f3f2",
+              "on-background": "#1b1b1c",
+              "on-primary-fixed": "#002018",
+              "on-error": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "tertiary-fixed-dim": "#ffb4a8",
+              "on-tertiary-fixed": "#3c0804",
+              "error-container": "#ffdad6",
+              "outline-variant": "#bec9c3",
+              "surface-variant": "#e5e2e1",
+              "tertiary-container": "#a3574c",
+              "on-primary": "#ffffff",
+              "secondary-container": "#d8e6e1",
+              "surface-container-high": "#eae7e7",
+              "tertiary-fixed": "#ffdad5",
+              "on-primary-fixed-variant": "#005140",
+              "on-tertiary-fixed-variant": "#74332a",
+              "surface-dim": "#dcd9d9",
+              "primary-fixed-dim": "#82d6bb",
+              "on-tertiary-container": "#ffebe8",
+              "on-secondary-container": "#5a6763",
+              error: "#ba1a1a",
+              "on-secondary-fixed": "#121e1b",
+              "on-secondary-fixed-variant": "#3d4946",
+              background: "#fcf9f8",
+              "primary-fixed": "#9ef3d7",
+              secondary: "#54615d",
+              "inverse-on-surface": "#f3f0ef",
+              surface: "#fcf9f8",
+              tertiary: "#854036",
+              "surface-bright": "#fcf9f8",
+              primary: "#00604c",
+              "surface-tint": "#016b55",
+              "on-surface": "#1b1b1c",
+              "inverse-primary": "#82d6bb",
+              "surface-container-highest": "#e5e2e1",
+              "secondary-fixed": "#d8e6e1",
+              outline: "#6e7a74",
+              "on-error-container": "#93000a",
+              "on-secondary": "#ffffff",
+              "surface-container-lowest": "#ffffff",
+              "on-surface-variant": "#3e4945",
+              "surface-container": "#f0eded",
+              "inverse-surface": "#303030",
+              "on-primary-container": "#b1ffe4",
+            },
+            fontFamily: {
+              headline: ["Manrope", "sans-serif"],
+              body: ["Inter", "sans-serif"],
+              label: ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "1.5rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      h1,
+      h2,
+      h3,
+      .display-font {
+        font-family: "Manrope", sans-serif;
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+        vertical-align: middle;
+      }
+      .soft-shadow {
+        box-shadow: 0 12px 32px -4px rgba(27, 27, 28, 0.06);
+      }
+      /* subtle background interest (optional) */
+      .bg-subtle-pattern {
+        background-color: #fcf9f8;
+        background-image: radial-gradient(
+          rgba(0, 96, 76, 0.03) 1px,
+          transparent 1px
+        );
+        background-size: 24px 24px;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background text-on-surface min-h-screen flex items-center justify-center p-4 sm:p-6 bg-subtle-pattern"
+  >
+    <!-- centered card – everything in one container, no split -->
+    <div class="w-full max-w-md">
+      <!-- main card (exactly the form container from the right side, now full width) -->
+      <div
+        class="bg-surface-container-lowest rounded-[2rem] p-6 sm:p-8 soft-shadow border border-outline-variant/10"
+      >
+        <div class="mb-8 text-center sm:text-left">
+          <div
+            class="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center text-on-primary mb-5 mx-auto sm:mx-0"
+          >
+            <span class="material-symbols-outlined text-[28px]">login</span>
+          </div>
+          <h2 class="text-3xl font-headline font-bold tracking-tight">
+            Lecturer Login
+          </h2>
+          <p class="text-on-surface-variant mt-2">
+            Enter your credentials to access the portal.
+          </p>
+        </div>
+
+        <!-- form (identical to original, fully functional) -->
+        <form id="loginForm" class="space-y-5">
+          <div>
+            <label
+              class="block text-sm font-semibold text-on-surface mb-2"
+              for="email"
+              >Email Address</label
+            >
+            <div class="relative">
+              <span
+                class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg"
+                >mail</span
+              >
+              <input
+                id="email"
+                type="email"
+                class="w-full bg-surface-container-high border-none rounded-xl py-3.5 pl-12 pr-4 text-on-surface font-medium focus:ring-2 focus:ring-primary"
+                placeholder="Enter lecturer email"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label
+              class="block text-sm font-semibold text-on-surface mb-2"
+              for="password"
+              >Password</label
+            >
+            <div class="relative">
+              <span
+                class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg"
+                >lock</span
+              >
+              <input
+                id="password"
+                type="password"
+                class="w-full bg-surface-container-high border-none rounded-xl py-3.5 pl-12 pr-14 text-on-surface font-medium focus:ring-2 focus:ring-primary"
+                placeholder="Enter password"
+              />
+              <button
+                id="togglePasswordBtn"
+                type="button"
+                class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full hover:bg-surface-container flex items-center justify-center text-on-surface-variant transition-all"
+                aria-label="Toggle password visibility"
+              >
+                <span id="togglePasswordIcon" class="material-symbols-outlined"
+                  >visibility</span
+                >
+              </button>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between gap-4 flex-wrap">
+            <label class="inline-flex items-center gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                class="rounded border-outline-variant text-primary focus:ring-primary"
+              />
+              <span class="text-sm text-on-surface-variant">Remember me</span>
+            </label>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full bg-primary text-on-primary py-3.5 rounded-xl font-semibold flex items-center justify-center gap-3 hover:bg-primary-container transition-all soft-shadow"
+          >
+            <span class="material-symbols-outlined">login</span>
+            Sign In
+          </button>
+
+          <!-- dynamic message area -->
+          <p
+            id="loginMessage"
+            class="hidden text-sm font-medium rounded-lg px-4 py-3"
+          ></p>
+        </form>
+      </div>
+    </div>
+
+    <!-- JavaScript (identical behaviour, fixed toggle & validation) -->
+    <script>
+      (function () {
+        const form = document.getElementById("loginForm");
+        const email = document.getElementById("email");
+        const password = document.getElementById("password");
+        const message = document.getElementById("loginMessage");
+        const toggleBtn = document.getElementById("togglePasswordBtn");
+        const toggleIcon = document.getElementById("togglePasswordIcon");
+
+        function hideMessage() {
+          message.classList.add("hidden");
+          message.classList.remove(
+            "bg-error-container",
+            "text-on-error-container",
+            "bg-primary-fixed",
+            "text-on-primary-fixed-variant",
+          );
+          message.textContent = "";
+        }
+
+        toggleBtn.addEventListener("click", function () {
+          const isPassword = password.type === "password";
+          password.type = isPassword ? "text" : "password";
+          toggleIcon.textContent = isPassword ? "visibility_off" : "visibility";
+        });
+
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+          hideMessage();
+          message.classList.remove("hidden");
+
+          if (!email.value.trim() || !password.value.trim()) {
+            message.textContent =
+              "Please enter your email address and password.";
+            message.classList.add(
+              "bg-error-container",
+              "text-on-error-container",
+            );
+            return;
+          }
+
+          if (!email.value.includes("@")) {
+            message.textContent = "Please enter a valid email address.";
+            message.classList.add(
+              "bg-error-container",
+              "text-on-error-container",
+            );
+            return;
+          }
+
+          message.textContent = "Login successful. Redirecting to dashboard...";
+          message.classList.add(
+            "bg-primary-fixed",
+            "text-on-primary-fixed-variant",
+          );
+
+          setTimeout(() => {
+            // change to actual dashboard url when needed
+            window.location.href = "dashboard.html";
+          }, 1000);
+        });
+      })();
+    </script>
+  </body>
+</html>
