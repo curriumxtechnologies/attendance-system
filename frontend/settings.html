@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>EduAttend · Settings</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed-dim": "#bccac5",
+              "primary-container": "#1f7a63",
+              "surface-container-low": "#f6f3f2",
+              "on-background": "#1b1b1c",
+              "on-primary-fixed": "#002018",
+              "on-error": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "tertiary-fixed-dim": "#ffb4a8",
+              "on-tertiary-fixed": "#3c0804",
+              "error-container": "#ffdad6",
+              "outline-variant": "#bec9c3",
+              "surface-variant": "#e5e2e1",
+              "tertiary-container": "#a3574c",
+              "on-primary": "#ffffff",
+              "secondary-container": "#d8e6e1",
+              "surface-container-high": "#eae7e7",
+              "tertiary-fixed": "#ffdad5",
+              "on-primary-fixed-variant": "#005140",
+              "on-tertiary-fixed-variant": "#74332a",
+              "surface-dim": "#dcd9d9",
+              "primary-fixed-dim": "#82d6bb",
+              "on-tertiary-container": "#ffebe8",
+              "on-secondary-container": "#5a6763",
+              error: "#ba1a1a",
+              "on-secondary-fixed": "#121e1b",
+              "on-secondary-fixed-variant": "#3d4946",
+              background: "#fcf9f8",
+              "primary-fixed": "#9ef3d7",
+              secondary: "#54615d",
+              "inverse-on-surface": "#f3f0ef",
+              surface: "#fcf9f8",
+              tertiary: "#854036",
+              "surface-bright": "#fcf9f8",
+              primary: "#00604c",
+              "surface-tint": "#016b55",
+              "on-surface": "#1b1b1c",
+              "inverse-primary": "#82d6bb",
+              "surface-container-highest": "#e5e2e1",
+              "secondary-fixed": "#d8e6e1",
+              outline: "#6e7a74",
+              "on-error-container": "#93000a",
+              "on-secondary": "#ffffff",
+              "surface-container-lowest": "#ffffff",
+              "on-surface-variant": "#3e4945",
+              "surface-container": "#f0eded",
+              "inverse-surface": "#303030",
+              "on-primary-container": "#b1ffe4",
+            },
+            fontFamily: {
+              headline: ["Manrope", "sans-serif"],
+              body: ["Inter", "sans-serif"],
+              label: ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "1.5rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      h1,
+      h2,
+      h3,
+      .display-font {
+        font-family: "Manrope", sans-serif;
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+        vertical-align: middle;
+      }
+      .soft-shadow {
+        box-shadow: 0 12px 32px -4px rgba(27, 27, 28, 0.06);
+      }
+      .glass-nav {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .sidebar-transition {
+        transition:
+          transform 0.3s ease,
+          opacity 0.3s ease;
+      }
+    </style>
+  </head>
+  <body class="bg-background text-on-surface overflow-x-hidden">
+    <div class="flex min-h-screen">
+      <!-- Mobile Overlay -->
+      <div
+        id="sidebarOverlay"
+        class="fixed inset-0 bg-black/40 z-40 hidden lg:hidden"
+      ></div>
+
+      <!-- Sidebar -->
+      <aside
+        id="sidebar"
+        class="sidebar-transition fixed top-0 left-0 z-50 h-screen w-72 max-w-[85vw] bg-surface border-r border-outline-variant/20 flex flex-col -translate-x-full lg:translate-x-0 lg:sticky lg:top-0 lg:z-auto"
+      >
+        <div
+          class="p-6 sm:p-8 flex items-center justify-between gap-4 border-b border-outline-variant/10 lg:border-b-0"
+        >
+          <div class="flex items-center gap-4">
+            <div
+              class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-on-primary"
+            >
+              <span class="material-symbols-outlined">school</span>
+            </div>
+            <div>
+              <h2 class="text-on-surface font-headline font-bold leading-tight">
+                University Portal
+              </h2>
+              <p class="text-on-surface-variant text-xs font-body">
+                Lecturer Access
+              </p>
+            </div>
+          </div>
+
+          <button
+            id="closeSidebar"
+            type="button"
+            class="lg:hidden w-10 h-10 rounded-full hover:bg-surface-container flex items-center justify-center"
+            aria-label="Close menu"
+          >
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+
+        <nav
+          class="flex-1 px-4 py-4 space-y-2 mt-2 lg:mt-4 overflow-y-auto no-scrollbar"
+        >
+          <a
+            class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all"
+            href="dashboard.html"
+          >
+            <span class="material-symbols-outlined">dashboard</span>
+            <span class="font-body">Dashboard</span>
+          </a>
+
+          <a
+            class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all"
+            href="mark-attendance.html"
+          >
+            <span class="material-symbols-outlined">fact_check</span>
+            <span class="font-body">Mark Attendance</span>
+          </a>
+
+          <a
+            class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all"
+            href="attendance-records.html"
+          >
+            <span class="material-symbols-outlined">analytics</span>
+            <span class="font-body">Attendance Records</span>
+          </a>
+
+          <a
+            class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all"
+            href="attendance-eligibility.html"
+          >
+            <span class="material-symbols-outlined">rule</span>
+            <span class="font-body">Attendance Eligibility</span>
+          </a>
+
+          <a
+            class="flex items-center gap-4 px-4 py-3 rounded-xl bg-secondary-container text-primary font-medium transition-all mt-8"
+            href="settings.html"
+          >
+            <span class="material-symbols-outlined">settings</span>
+            <span class="font-body">Settings</span>
+            <div class="ml-auto w-1 h-6 bg-primary rounded-full"></div>
+          </a>
+
+          <a
+            class="flex items-center gap-4 px-4 py-3 rounded-xl text-error hover:bg-error-container/10 transition-all"
+            href="#"
+          >
+            <span class="material-symbols-outlined">logout</span>
+            <span class="font-body">Logout</span>
+          </a>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="flex-1 flex flex-col min-w-0 w-full">
+        <header
+          class="h-auto min-h-20 glass-nav border-b border-outline-variant/10 px-4 sm:px-6 lg:px-10 py-4 lg:py-0 flex items-center sticky top-0 z-30"
+        >
+          <div class="flex items-center gap-3 sm:gap-4 flex-1">
+            <button
+              id="openSidebar"
+              type="button"
+              class="lg:hidden w-11 h-11 rounded-full bg-surface-container-low hover:bg-surface-container flex items-center justify-center shrink-0"
+              aria-label="Open menu"
+            >
+              <span class="material-symbols-outlined">menu</span>
+            </button>
+
+            <div class="relative w-full max-w-md">
+              <span
+                class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg"
+                >search</span
+              >
+              <input
+                class="w-full bg-surface-container-low border-none rounded-full py-2.5 pl-12 pr-4 sm:pr-6 text-sm focus:ring-2 focus:ring-primary/20 transition-all"
+                placeholder="Search settings..."
+                type="text"
+              />
+            </div>
+          </div>
+        </header>
+
+        <div
+          class="p-4 sm:p-6 lg:p-10 space-y-6 sm:space-y-8 overflow-y-auto no-scrollbar pb-8 sm:pb-10"
+        >
+          <!-- Page heading -->
+          <div>
+            <h2
+              class="text-2xl sm:text-3xl font-headline font-bold text-on-surface tracking-tight"
+            >
+              Settings
+            </h2>
+            <p
+              class="text-on-surface-variant font-body mt-1 text-sm sm:text-base"
+            >
+              View lecturer details and change password.
+            </p>
+          </div>
+
+          <!-- Lecturer details -->
+          <div
+            class="bg-surface-container-lowest rounded-xl soft-shadow p-5 sm:p-6 lg:p-8"
+          >
+            <div class="flex items-center gap-4 mb-6">
+              <h3 class="text-base sm:text-lg font-headline font-semibold">
+                Lecturer Details
+              </h3>
+            </div>
+
+            <div class="flex flex-col sm:flex-row sm:items-start gap-5 mb-8">
+              <img
+                class="w-20 h-20 rounded-full object-cover border-4 border-primary/10"
+                alt="Dr. Julian Vance"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3r_2VPSHQcarjkPv6dsKrxDObu2lk4-ghhecbRk_XKVBMOXGypaMPcFjpqaaPqjION1MWQPbNYxYzu9KpkUSLZ15nAgqf4Tfn_WJs_9kuq2pj6THJNKCI9HAKym9CjZ4h9jGiDuHIb5dYvzvrU_J6HpH3uM8TjuLuh-ZmRMWbIUVWUhJ41a2-03UHhD3QY1CT_lkweJzrY7-2CemXgOLgJtf24cr8SejyjLH_oxViFiPfmcWiLiMi9J7F9N5Rdoh_duf0KAdRBTw"
+              />
+              <div>
+                <h4 class="text-xl sm:text-2xl font-headline font-bold">
+                  Dr. Julian Vance
+                </h4>
+                <p class="text-on-surface-variant mt-1 text-sm sm:text-base">
+                  Senior Lecturer · Faculty of Social Sciences
+                </p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+              <div
+                class="bg-surface-container-low rounded-xl p-5 border border-outline-variant/10"
+              >
+                <p class="text-sm text-on-surface-variant mb-1">Full Name</p>
+                <p class="font-semibold text-on-surface">Dr. Julian Vance</p>
+              </div>
+
+              <div
+                class="bg-surface-container-low rounded-xl p-5 border border-outline-variant/10"
+              >
+                <p class="text-sm text-on-surface-variant mb-1">Staff ID</p>
+                <p class="font-semibold text-on-surface">LCT-20481</p>
+              </div>
+
+              <div
+                class="bg-surface-container-low rounded-xl p-5 border border-outline-variant/10"
+              >
+                <p class="text-sm text-on-surface-variant mb-1">
+                  Email Address
+                </p>
+                <p
+                  class="font-semibold text-on-surface break-all sm:break-normal"
+                >
+                  julian.vance@university.edu
+                </p>
+              </div>
+
+              <div
+                class="bg-surface-container-low rounded-xl p-5 border border-outline-variant/10"
+              >
+                <p class="text-sm text-on-surface-variant mb-1">Department</p>
+                <p class="font-semibold text-on-surface">Economics</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Change password -->
+          <div
+            class="bg-surface-container-lowest rounded-xl soft-shadow p-5 sm:p-6 lg:p-8"
+          >
+            <div class="flex items-center gap-4 mb-6">
+              <h3 class="text-base sm:text-lg font-headline font-semibold">
+                Change Password
+              </h3>
+            </div>
+
+            <!-- collapsed password row -->
+            <div
+              id="passwordSummary"
+              class="flex items-center justify-between gap-4 bg-surface-container-low rounded-xl p-4 sm:p-5 border border-outline-variant/10"
+            >
+              <div class="min-w-0">
+                <p class="text-sm text-on-surface-variant mb-1">Password</p>
+                <p
+                  class="font-semibold text-on-surface tracking-[0.3em] truncate"
+                >
+                  ••••••••••••
+                </p>
+              </div>
+
+              <button
+                id="editPasswordBtn"
+                type="button"
+                class="w-11 h-11 rounded-full bg-surface-container-high hover:bg-secondary-container transition-all flex items-center justify-center text-primary shrink-0"
+                aria-label="Edit password"
+              >
+                <span class="material-symbols-outlined">edit</span>
+              </button>
+            </div>
+
+            <!-- hidden full form -->
+            <form class="space-y-5 max-w-2xl hidden mt-6" id="passwordForm">
+              <div>
+                <label
+                  class="block text-sm font-semibold text-on-surface mb-2"
+                  for="currentPassword"
+                  >Current Password</label
+                >
+                <input
+                  id="currentPassword"
+                  type="password"
+                  class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 text-on-surface font-medium focus:ring-2 focus:ring-primary"
+                  placeholder="Enter current password"
+                />
+              </div>
+
+              <div>
+                <label
+                  class="block text-sm font-semibold text-on-surface mb-2"
+                  for="newPassword"
+                  >New Password</label
+                >
+                <input
+                  id="newPassword"
+                  type="password"
+                  class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 text-on-surface font-medium focus:ring-2 focus:ring-primary"
+                  placeholder="Enter new password"
+                />
+              </div>
+
+              <div>
+                <label
+                  class="block text-sm font-semibold text-on-surface mb-2"
+                  for="confirmPassword"
+                  >Confirm New Password</label
+                >
+                <input
+                  id="confirmPassword"
+                  type="password"
+                  class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 text-on-surface font-medium focus:ring-2 focus:ring-primary"
+                  placeholder="Confirm new password"
+                />
+              </div>
+
+              <div class="flex flex-col sm:flex-row sm:items-center gap-3 pt-2">
+                <button
+                  type="submit"
+                  class="w-full sm:w-auto bg-primary text-on-primary px-6 sm:px-8 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-primary-container transition-all"
+                >
+                  <span class="material-symbols-outlined">lock_reset</span>
+                  Update Password
+                </button>
+
+                <button
+                  id="cancelPasswordBtn"
+                  type="button"
+                  class="w-full sm:w-auto px-6 py-3 rounded-xl font-semibold bg-surface-container-high text-on-surface hover:bg-surface-container transition-all"
+                >
+                  Cancel
+                </button>
+              </div>
+
+              <p
+                id="passwordMessage"
+                class="hidden text-sm font-medium rounded-lg px-4 py-3"
+              ></p>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="js/sidebar-menu.js"></script>
+
+    <script>
+      (function () {
+        const editPasswordBtn = document.getElementById("editPasswordBtn");
+        const cancelPasswordBtn = document.getElementById("cancelPasswordBtn");
+        const passwordSummary = document.getElementById("passwordSummary");
+        const form = document.getElementById("passwordForm");
+        const currentPassword = document.getElementById("currentPassword");
+        const newPassword = document.getElementById("newPassword");
+        const confirmPassword = document.getElementById("confirmPassword");
+        const message = document.getElementById("passwordMessage");
+
+        function hideMessage() {
+          message.classList.add("hidden");
+          message.classList.remove(
+            "bg-error-container",
+            "text-on-error-container",
+            "bg-primary-fixed",
+            "text-on-primary-fixed-variant",
+          );
+          message.textContent = "";
+        }
+
+        editPasswordBtn.addEventListener("click", function () {
+          passwordSummary.classList.add("hidden");
+          form.classList.remove("hidden");
+          hideMessage();
+        });
+
+        cancelPasswordBtn.addEventListener("click", function () {
+          form.classList.add("hidden");
+          passwordSummary.classList.remove("hidden");
+          form.reset();
+          hideMessage();
+        });
+
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          hideMessage();
+          message.classList.remove("hidden");
+
+          if (
+            !currentPassword.value.trim() ||
+            !newPassword.value.trim() ||
+            !confirmPassword.value.trim()
+          ) {
+            message.textContent = "Please fill in all password fields.";
+            message.classList.add(
+              "bg-error-container",
+              "text-on-error-container",
+            );
+            return;
+          }
+
+          if (newPassword.value.length < 6) {
+            message.textContent =
+              "New password must be at least 6 characters long.";
+            message.classList.add(
+              "bg-error-container",
+              "text-on-error-container",
+            );
+            return;
+          }
+
+          if (newPassword.value !== confirmPassword.value) {
+            message.textContent =
+              "New password and confirm password do not match.";
+            message.classList.add(
+              "bg-error-container",
+              "text-on-error-container",
+            );
+            return;
+          }
+
+          message.textContent = "Password updated successfully. (Demo only)";
+          message.classList.add(
+            "bg-primary-fixed",
+            "text-on-primary-fixed-variant",
+          );
+
+          form.reset();
+
+          setTimeout(() => {
+            form.classList.add("hidden");
+            passwordSummary.classList.remove("hidden");
+            hideMessage();
+          }, 1500);
+        });
+      })();
+    </script>
+  </body>
+</html>

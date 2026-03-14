@@ -1,0 +1,738 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>EduAttend · Mark Attendance</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed-dim": "#bccac5",
+              "primary-container": "#1f7a63",
+              "surface-container-low": "#f6f3f2",
+              "on-background": "#1b1b1c",
+              "on-primary-fixed": "#002018",
+              "on-error": "#ffffff",
+              "on-tertiary": "#ffffff",
+              "tertiary-fixed-dim": "#ffb4a8",
+              "on-tertiary-fixed": "#3c0804",
+              "error-container": "#ffdad6",
+              "outline-variant": "#bec9c3",
+              "surface-variant": "#e5e2e1",
+              "tertiary-container": "#a3574c",
+              "on-primary": "#ffffff",
+              "secondary-container": "#d8e6e1",
+              "surface-container-high": "#eae7e7",
+              "tertiary-fixed": "#ffdad5",
+              "on-primary-fixed-variant": "#005140",
+              "on-tertiary-fixed-variant": "#74332a",
+              "surface-dim": "#dcd9d9",
+              "primary-fixed-dim": "#82d6bb",
+              "on-tertiary-container": "#ffebe8",
+              "on-secondary-container": "#5a6763",
+              error: "#ba1a1a",
+              "on-secondary-fixed": "#121e1b",
+              "on-secondary-fixed-variant": "#3d4946",
+              background: "#fcf9f8",
+              "primary-fixed": "#9ef3d7",
+              secondary: "#54615d",
+              "inverse-on-surface": "#f3f0ef",
+              surface: "#fcf9f8",
+              tertiary: "#854036",
+              "surface-bright": "#fcf9f8",
+              primary: "#00604c",
+              "surface-tint": "#016b55",
+              "on-surface": "#1b1b1c",
+              "inverse-primary": "#82d6bb",
+              "surface-container-highest": "#e5e2e1",
+              "secondary-fixed": "#d8e6e1",
+              outline: "#6e7a74",
+              "on-error-container": "#93000a",
+              "on-secondary": "#ffffff",
+              "surface-container-lowest": "#ffffff",
+              "on-surface-variant": "#3e4945",
+              "surface-container": "#f0eded",
+              "inverse-surface": "#303030",
+              "on-primary-container": "#b1ffe4",
+            },
+            fontFamily: {
+              headline: ["Manrope", "sans-serif"],
+              body: ["Inter", "sans-serif"],
+              label: ["Inter", "sans-serif"],
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "1.5rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      h1,
+      h2,
+      h3,
+      .display-font {
+        font-family: "Manrope", sans-serif;
+      }
+      .material-symbols-outlined {
+        font-variation-settings:
+          "FILL" 0,
+          "wght" 400,
+          "GRAD" 0,
+          "opsz" 24;
+        vertical-align: middle;
+      }
+      .soft-shadow {
+        box-shadow: 0 12px 32px -4px rgba(27, 27, 28, 0.06);
+      }
+      .glass-nav {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(12px);
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .sidebar-transition {
+        transition:
+          transform 0.3s ease,
+          opacity 0.3s ease;
+      }
+    </style>
+  </head>
+  <body class="bg-background text-on-surface overflow-x-hidden">
+    <div class="flex min-h-screen">
+      <!-- Mobile Overlay -->
+      <div
+        id="sidebarOverlay"
+        class="fixed inset-0 bg-black/40 z-40 hidden lg:hidden"
+      ></div>
+
+      <!-- Sidebar -->
+      <aside
+        id="sidebar"
+        class="sidebar-transition fixed top-0 left-0 z-50 h-screen w-72 max-w-[85vw] bg-surface border-r border-outline-variant/20 flex flex-col -translate-x-full lg:translate-x-0 lg:sticky lg:top-0 lg:z-auto"
+      >
+        <div
+          class="p-6 sm:p-8 flex items-center justify-between gap-4 border-b border-outline-variant/10 lg:border-b-0"
+        >
+          <div class="flex items-center gap-4">
+            <div
+              class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-on-primary"
+            >
+              <span class="material-symbols-outlined">school</span>
+            </div>
+            <div>
+              <h2 class="text-on-surface font-headline font-bold leading-tight">
+                University Portal
+              </h2>
+              <p class="text-on-surface-variant text-xs font-body">
+                Lecturer Access
+              </p>
+            </div>
+          </div>
+
+          <button
+            id="closeSidebar"
+            type="button"
+            class="lg:hidden w-10 h-10 rounded-full hover:bg-surface-container flex items-center justify-center"
+            aria-label="Close menu"
+          >
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+
+        <nav
+          class="flex-1 px-4 py-4 space-y-2 mt-2 lg:mt-4 overflow-y-auto no-scrollbar"
+        >
+          <a
+            class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all"
+            href="dashboard.html"
+          >
+            <span class="material-symbols-outlined">dashboard</span>
+            <span class="font-body">Dashboard</span>
+          </a>
+
+          <a
+            class="flex items-center gap-4 px-4 py-3 rounded-xl bg-secondary-container text-primary font-medium transition-all"
+            href="mark-attendance.html"
+          >
+            <span class="material-symbols-outlined">fact_check</span>
+            <span class="font-body">Mark Attendance</span>
+            <div class="ml-auto w-1 h-6 bg-primary rounded-full"></div>
+          </a>
+
+          <a
+            class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all"
+            href="attendance-records.html"
+          >
+            <span class="material-symbols-outlined">analytics</span>
+            <span class="font-body">Attendance Records</span>
+          </a>
+
+          <a
+            class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all"
+            href="attendance-eligibility.html"
+          >
+            <span class="material-symbols-outlined">rule</span>
+            <span class="font-body">Attendance Eligibility</span>
+          </a>
+
+          <a
+            class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all mt-8"
+            href="settings.html"
+          >
+            <span class="material-symbols-outlined">settings</span>
+            <span class="font-body">Settings</span>
+          </a>
+
+          <a
+            class="flex items-center gap-4 px-4 py-3 rounded-xl text-error hover:bg-error-container/10 transition-all"
+            href="#"
+          >
+            <span class="material-symbols-outlined">logout</span>
+            <span class="font-body">Logout</span>
+          </a>
+        </nav>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="flex-1 flex flex-col min-w-0 w-full">
+        <!-- TopNavBar -->
+        <header
+          class="h-auto min-h-20 glass-nav border-b border-outline-variant/10 px-4 sm:px-6 lg:px-10 py-4 lg:py-0 flex items-center sticky top-0 z-30"
+        >
+          <div class="flex items-center gap-3 sm:gap-4 flex-1">
+            <button
+              id="openSidebar"
+              type="button"
+              class="lg:hidden w-11 h-11 rounded-full bg-surface-container-low hover:bg-surface-container flex items-center justify-center shrink-0"
+              aria-label="Open menu"
+            >
+              <span class="material-symbols-outlined">menu</span>
+            </button>
+
+            <div class="relative w-full max-w-md">
+              <span
+                class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg"
+                >search</span
+              >
+              <input
+                class="w-full bg-surface-container-low border-none rounded-full py-2.5 pl-12 pr-4 sm:pr-6 text-sm focus:ring-2 focus:ring-primary/20 transition-all"
+                placeholder="Search for students, courses, or records..."
+                type="text"
+              />
+            </div>
+          </div>
+        </header>
+
+        <!-- MARK ATTENDANCE CONTENT -->
+        <div
+          class="p-4 sm:p-6 lg:p-10 space-y-6 sm:space-y-8 overflow-y-auto no-scrollbar pb-8 sm:pb-10"
+        >
+          <!-- Heading -->
+          <div
+            class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+          >
+            <div>
+              <h2
+                class="text-2xl sm:text-3xl font-headline font-bold text-on-surface tracking-tight"
+              >
+                Mark Attendance
+              </h2>
+              <p
+                class="text-on-surface-variant font-body mt-1 text-sm sm:text-base"
+              >
+                Follow the steps: select a course, mark present or absent, then
+                save.
+              </p>
+            </div>
+          </div>
+
+          <!-- Select course -->
+          <div
+            class="bg-surface-container-lowest p-5 sm:p-6 lg:p-8 rounded-xl soft-shadow space-y-4 sm:space-y-6"
+          >
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
+              <h3 class="text-base sm:text-lg font-headline font-semibold">
+                Select a course
+              </h3>
+              <div class="relative inline-block w-full sm:w-64">
+                <select
+                  class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 text-on-surface font-medium focus:ring-2 focus:ring-primary appearance-none"
+                  id="courseSelect"
+                >
+                  <option value="ECO101" selected>
+                    Intro to Macroeconomics
+                  </option>
+                  <option value="MKT101">Digital Marketing 101</option>
+                  <option value="STAT202">Advanced Statistics</option>
+                  <option value="CS210">Data Structures</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Student list -->
+          <div
+            class="bg-surface-container-lowest rounded-xl soft-shadow p-4 sm:p-6 lg:p-8"
+          >
+            <div class="flex items-center gap-4 mb-5 sm:mb-6">
+              <h3
+                id="studentListHeading"
+                class="text-base sm:text-lg font-headline font-semibold"
+              >
+                Student list · ECO101 (Intro to Macroeconomics)
+              </h3>
+            </div>
+
+            <!-- Desktop header -->
+            <div
+              class="hidden md:grid grid-cols-12 gap-4 px-4 py-3 bg-surface-container-low rounded-lg mb-2 text-xs font-label uppercase tracking-wider text-on-surface-variant font-bold"
+            >
+              <div class="col-span-5">Student Name & ID</div>
+              <div class="col-span-3">Programme</div>
+              <div class="col-span-4 text-center">Attendance status</div>
+            </div>
+
+            <div class="space-y-3 md:space-y-1">
+              <!-- Student 1 -->
+              <div
+                class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start md:items-center px-4 py-4 rounded-xl hover:bg-surface-container-high transition-all"
+              >
+                <div class="md:col-span-5 flex items-center gap-3 min-w-0">
+                  <div
+                    class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center font-bold shrink-0"
+                  >
+                    MK
+                  </div>
+                  <div class="min-w-0">
+                    <span class="font-semibold text-on-surface block truncate"
+                      >Maya Kaur</span
+                    >
+                    <span class="text-xs text-on-surface-variant"
+                      >ID: 20240087</span
+                    >
+                  </div>
+                </div>
+
+                <div class="md:col-span-3 text-sm text-on-surface-variant">
+                  <span class="md:hidden font-semibold text-on-surface"
+                    >Programme:
+                  </span>
+                  Economics
+                </div>
+
+                <div
+                  class="md:col-span-4 flex flex-col sm:flex-row md:justify-center gap-2"
+                >
+                  <button
+                    class="status-present px-4 sm:px-5 py-2 rounded-full text-sm font-bold transition-all flex items-center justify-center gap-1 bg-primary-fixed text-on-primary-fixed-variant ring-2 ring-primary ring-offset-2"
+                    data-student="maya"
+                    data-status="present"
+                  >
+                    <span class="material-symbols-outlined text-lg"
+                      >check_circle</span
+                    >
+                    Present
+                  </button>
+                  <button
+                    class="status-absent px-4 sm:px-5 py-2 rounded-full text-sm font-bold transition-all flex items-center justify-center gap-1 bg-surface-container-high text-on-surface-variant hover:bg-error-container/20"
+                    data-student="maya"
+                    data-status="absent"
+                  >
+                    <span class="material-symbols-outlined text-lg"
+                      >cancel</span
+                    >
+                    Absent
+                  </button>
+                </div>
+              </div>
+
+              <!-- Student 2 -->
+              <div
+                class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start md:items-center px-4 py-4 rounded-xl hover:bg-surface-container-high transition-all"
+              >
+                <div class="md:col-span-5 flex items-center gap-3 min-w-0">
+                  <div
+                    class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed-variant font-bold shrink-0"
+                  >
+                    LS
+                  </div>
+                  <div class="min-w-0">
+                    <span class="font-semibold text-on-surface block truncate"
+                      >Liam Sterling</span
+                    >
+                    <span class="text-xs text-on-surface-variant"
+                      >ID: 20240112</span
+                    >
+                  </div>
+                </div>
+
+                <div class="md:col-span-3 text-sm text-on-surface-variant">
+                  <span class="md:hidden font-semibold text-on-surface"
+                    >Programme:
+                  </span>
+                  Marketing
+                </div>
+
+                <div
+                  class="md:col-span-4 flex flex-col sm:flex-row md:justify-center gap-2"
+                >
+                  <button
+                    class="status-present px-4 sm:px-5 py-2 rounded-full text-sm font-bold transition-all flex items-center justify-center gap-1 bg-surface-container-high text-on-surface-variant hover:bg-primary-fixed"
+                    data-student="liam"
+                    data-status="present"
+                  >
+                    <span class="material-symbols-outlined text-lg"
+                      >check_circle</span
+                    >
+                    Present
+                  </button>
+                  <button
+                    class="status-absent px-4 sm:px-5 py-2 rounded-full text-sm font-bold transition-all flex items-center justify-center gap-1 bg-surface-container-high text-on-surface-variant hover:bg-error-container/20"
+                    data-student="liam"
+                    data-status="absent"
+                  >
+                    <span class="material-symbols-outlined text-lg"
+                      >cancel</span
+                    >
+                    Absent
+                  </button>
+                </div>
+              </div>
+
+              <!-- Student 3 -->
+              <div
+                class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start md:items-center px-4 py-4 rounded-xl hover:bg-surface-container-high transition-all"
+              >
+                <div class="md:col-span-5 flex items-center gap-3 min-w-0">
+                  <div
+                    class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant font-bold shrink-0"
+                  >
+                    JA
+                  </div>
+                  <div class="min-w-0">
+                    <span class="font-semibold text-on-surface block truncate"
+                      >Jared Ames</span
+                    >
+                    <span class="text-xs text-on-surface-variant"
+                      >ID: 20239874</span
+                    >
+                  </div>
+                </div>
+
+                <div class="md:col-span-3 text-sm text-on-surface-variant">
+                  <span class="md:hidden font-semibold text-on-surface"
+                    >Programme:
+                  </span>
+                  Statistics
+                </div>
+
+                <div
+                  class="md:col-span-4 flex flex-col sm:flex-row md:justify-center gap-2"
+                >
+                  <button
+                    class="status-present px-4 sm:px-5 py-2 rounded-full text-sm font-bold transition-all flex items-center justify-center gap-1 bg-surface-container-high text-on-surface-variant hover:bg-primary-fixed"
+                    data-student="jared"
+                    data-status="present"
+                  >
+                    <span class="material-symbols-outlined text-lg"
+                      >check_circle</span
+                    >
+                    Present
+                  </button>
+                  <button
+                    class="status-absent px-4 sm:px-5 py-2 rounded-full text-sm font-bold transition-all flex items-center justify-center gap-1 bg-surface-container-high text-on-surface-variant hover:bg-error-container/20"
+                    data-student="jared"
+                    data-status="absent"
+                  >
+                    <span class="material-symbols-outlined text-lg"
+                      >cancel</span
+                    >
+                    Absent
+                  </button>
+                </div>
+              </div>
+
+              <!-- Student 4 -->
+              <div
+                class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start md:items-center px-4 py-4 rounded-xl hover:bg-surface-container-high transition-all"
+              >
+                <div class="md:col-span-5 flex items-center gap-3 min-w-0">
+                  <div
+                    class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold shrink-0"
+                  >
+                    EM
+                  </div>
+                  <div class="min-w-0">
+                    <span class="font-semibold text-on-surface block truncate"
+                      >Elena Moretti</span
+                    >
+                    <span class="text-xs text-on-surface-variant"
+                      >ID: 20241103</span
+                    >
+                  </div>
+                </div>
+
+                <div class="md:col-span-3 text-sm text-on-surface-variant">
+                  <span class="md:hidden font-semibold text-on-surface"
+                    >Programme:
+                  </span>
+                  Economics
+                </div>
+
+                <div
+                  class="md:col-span-4 flex flex-col sm:flex-row md:justify-center gap-2"
+                >
+                  <button
+                    class="status-present px-4 sm:px-5 py-2 rounded-full text-sm font-bold transition-all flex items-center justify-center gap-1 bg-primary-fixed text-on-primary-fixed-variant ring-2 ring-primary ring-offset-2"
+                    data-student="elena"
+                    data-status="present"
+                  >
+                    <span class="material-symbols-outlined text-lg"
+                      >check_circle</span
+                    >
+                    Present
+                  </button>
+                  <button
+                    class="status-absent px-4 sm:px-5 py-2 rounded-full text-sm font-bold transition-all flex items-center justify-center gap-1 bg-surface-container-high text-on-surface-variant hover:bg-error-container/20"
+                    data-student="elena"
+                    data-status="absent"
+                  >
+                    <span class="material-symbols-outlined text-lg"
+                      >cancel</span
+                    >
+                    Absent
+                  </button>
+                </div>
+              </div>
+
+              <!-- Student 5 -->
+              <div
+                class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start md:items-center px-4 py-4 rounded-xl hover:bg-surface-container-high transition-all"
+              >
+                <div class="md:col-span-5 flex items-center gap-3 min-w-0">
+                  <div
+                    class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center font-bold shrink-0"
+                  >
+                    RT
+                  </div>
+                  <div class="min-w-0">
+                    <span class="font-semibold text-on-surface block truncate"
+                      >Rosa Tran</span
+                    >
+                    <span class="text-xs text-on-surface-variant"
+                      >ID: 20237821</span
+                    >
+                  </div>
+                </div>
+
+                <div class="md:col-span-3 text-sm text-on-surface-variant">
+                  <span class="md:hidden font-semibold text-on-surface"
+                    >Programme:
+                  </span>
+                  Finance
+                </div>
+
+                <div
+                  class="md:col-span-4 flex flex-col sm:flex-row md:justify-center gap-2"
+                >
+                  <button
+                    class="status-present px-4 sm:px-5 py-2 rounded-full text-sm font-bold transition-all flex items-center justify-center gap-1 bg-surface-container-high text-on-surface-variant hover:bg-primary-fixed"
+                    data-student="rosa"
+                    data-status="present"
+                  >
+                    <span class="material-symbols-outlined text-lg"
+                      >check_circle</span
+                    >
+                    Present
+                  </button>
+                  <button
+                    class="status-absent px-4 sm:px-5 py-2 rounded-full text-sm font-bold transition-all flex items-center justify-center gap-1 bg-error-container text-on-error-container ring-2 ring-error ring-offset-2"
+                    data-student="rosa"
+                    data-status="absent"
+                  >
+                    <span class="material-symbols-outlined text-lg"
+                      >cancel</span
+                    >
+                    Absent
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Save section -->
+          <div class="flex items-start gap-8">
+            <div
+              class="w-full bg-surface-container-lowest p-5 sm:p-6 lg:p-8 rounded-xl soft-shadow flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between"
+            >
+              <div>
+                <h3 class="text-base sm:text-lg font-headline font-semibold">
+                  Save & store record
+                </h3>
+                <p class="text-sm text-on-surface-variant">
+                  After marking all students, click to persist attendance.
+                </p>
+              </div>
+
+              <button
+                id="saveAttendanceBtn"
+                class="w-full sm:w-auto bg-primary text-on-primary px-6 sm:px-10 py-3.5 sm:py-4 rounded-xl font-bold flex items-center justify-center gap-3 text-base sm:text-lg shadow-lg hover:bg-primary-container transition-all soft-shadow"
+              >
+                <span class="material-symbols-outlined">save</span>
+                Save Attendance
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="js/sidebar-menu.js"></script>
+
+    <script>
+      (function () {
+        const studentRows = document.querySelectorAll("[data-student]");
+        const grouped = {};
+
+        studentRows.forEach((btn) => {
+          const student = btn.dataset.student;
+          if (!grouped[student]) grouped[student] = [];
+          grouped[student].push(btn);
+        });
+
+        Object.values(grouped).forEach((buttons) => {
+          const presentBtn = buttons.find(
+            (b) => b.dataset.status === "present",
+          );
+          const absentBtn = buttons.find((b) => b.dataset.status === "absent");
+
+          if (!presentBtn || !absentBtn) return;
+
+          const setActive = (activeBtn, inactiveBtn) => {
+            if (activeBtn.classList.contains("status-present")) {
+              activeBtn.classList.remove(
+                "bg-surface-container-high",
+                "text-on-surface-variant",
+                "hover:bg-primary-fixed",
+              );
+              activeBtn.classList.add(
+                "bg-primary-fixed",
+                "text-on-primary-fixed-variant",
+                "ring-2",
+                "ring-primary",
+                "ring-offset-2",
+              );
+            } else {
+              activeBtn.classList.remove(
+                "bg-surface-container-high",
+                "text-on-surface-variant",
+                "hover:bg-error-container/20",
+              );
+              activeBtn.classList.add(
+                "bg-error-container",
+                "text-on-error-container",
+                "ring-2",
+                "ring-error",
+                "ring-offset-2",
+              );
+            }
+
+            if (inactiveBtn.classList.contains("status-present")) {
+              inactiveBtn.classList.remove(
+                "bg-primary-fixed",
+                "text-on-primary-fixed-variant",
+                "ring-2",
+                "ring-primary",
+                "ring-offset-2",
+              );
+              inactiveBtn.classList.add(
+                "bg-surface-container-high",
+                "text-on-surface-variant",
+                "hover:bg-primary-fixed",
+              );
+            } else {
+              inactiveBtn.classList.remove(
+                "bg-error-container",
+                "text-on-error-container",
+                "ring-2",
+                "ring-error",
+                "ring-offset-2",
+              );
+              inactiveBtn.classList.add(
+                "bg-surface-container-high",
+                "text-on-surface-variant",
+                "hover:bg-error-container/20",
+              );
+            }
+          };
+
+          presentBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            setActive(presentBtn, absentBtn);
+          });
+
+          absentBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            setActive(absentBtn, presentBtn);
+          });
+        });
+
+        const saveBtn = document.getElementById("saveAttendanceBtn");
+        if (saveBtn) {
+          saveBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            const presentCount = Array.from(
+              document.querySelectorAll(".status-present"),
+            ).filter((btn) =>
+              btn.classList.contains("bg-primary-fixed"),
+            ).length;
+
+            const absentCount = Array.from(
+              document.querySelectorAll(".status-absent"),
+            ).filter((btn) =>
+              btn.classList.contains("bg-error-container"),
+            ).length;
+
+            alert(
+              `✅ Attendance saved! (simulated)\nCourse: ${
+                document.getElementById("courseSelect").value
+              }\nPresent: ${presentCount}, Absent: ${absentCount}\nRecord stored in system.`,
+            );
+          });
+        }
+
+        const courseSelect = document.getElementById("courseSelect");
+        const heading = document.getElementById("studentListHeading");
+
+        if (courseSelect && heading) {
+          courseSelect.addEventListener("change", function () {
+            const courseCode = this.value;
+            const courseName = this.options[this.selectedIndex].text;
+            heading.textContent = `Student list · ${courseCode} (${courseName})`;
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>
