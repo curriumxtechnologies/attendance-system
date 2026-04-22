@@ -287,13 +287,22 @@
           <div
             class="bg-surface-container-lowest rounded-xl soft-shadow p-4 sm:p-6 lg:p-8"
           >
-            <div class="flex items-center gap-4 mb-5 sm:mb-6">
+            <div class="flex items-center justify-between gap-4 mb-5 sm:mb-6">
               <h3
                 class="text-base sm:text-lg font-headline font-semibold"
                 id="recordHeading"
               >
                 Attendance Record · Intro to Macroeconomics
               </h3>
+
+              <!-- Download Button -->
+              <button
+                id="downloadPdf"
+                class="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-primary/90 transition"
+              >
+                <span class="material-symbols-outlined">download</span>
+                Download PDF
+              </button>
             </div>
 
             <!-- Desktop table header -->
@@ -530,6 +539,41 @@
 
         renderCourse(courseSelect.value);
       })();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+      document
+        .getElementById("downloadPdf")
+        .addEventListener("click", function () {
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF();
+
+          const course = document.getElementById("recordHeading").textContent;
+          doc.setFontSize(14);
+          doc.text(course, 10, 10);
+
+          let y = 20;
+
+          const rows = document.querySelectorAll("#recordsTableBody > div");
+
+          rows.forEach((row) => {
+            const name = row.querySelector(".font-semibold").textContent;
+            const id = row.querySelector(".text-xs").textContent;
+            const programme = row.querySelectorAll("div")[1].textContent.trim();
+            const status = row.innerText.includes("Present")
+              ? "Present"
+              : "Absent";
+
+            doc.setFontSize(10);
+            doc.text(`${name} (${id})`, 10, y);
+            doc.text(programme, 80, y);
+            doc.text(status, 160, y);
+
+            y += 8;
+          });
+
+          doc.save("attendance-records.pdf");
+        });
     </script>
   </body>
 </html>
