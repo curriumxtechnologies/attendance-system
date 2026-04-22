@@ -295,13 +295,12 @@
                 Attendance Record · Intro to Macroeconomics
               </h3>
 
-              <!-- Download Button -->
               <button
                 id="downloadPdf"
-                class="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-primary/90 transition"
+                type="button"
+                class="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-white hover:opacity-90 transition-all"
               >
-                <span class="material-symbols-outlined">download</span>
-                Download PDF
+                <span class="material-symbols-outlined text-lg">download</span>
               </button>
             </div>
 
@@ -541,39 +540,323 @@
       })();
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
     <script>
-      document
-        .getElementById("downloadPdf")
-        .addEventListener("click", function () {
+      (function () {
+        const records = {
+          ECO101: {
+            courseName: "Intro to Macroeconomics",
+            students: [
+              {
+                initials: "MK",
+                name: "Maya Kaur",
+                id: "20240087",
+                programme: "Economics",
+                status: "Present",
+                avatarClass: "bg-secondary-container text-primary",
+              },
+              {
+                initials: "LS",
+                name: "Liam Sterling",
+                id: "20240112",
+                programme: "Marketing",
+                status: "Absent",
+                avatarClass: "bg-tertiary-fixed text-on-tertiary-fixed-variant",
+              },
+              {
+                initials: "JA",
+                name: "Jared Ames",
+                id: "20239874",
+                programme: "Statistics",
+                status: "Present",
+                avatarClass: "bg-surface-container text-on-surface-variant",
+              },
+              {
+                initials: "EM",
+                name: "Elena Moretti",
+                id: "20241103",
+                programme: "Economics",
+                status: "Present",
+                avatarClass: "bg-primary-fixed text-primary",
+              },
+              {
+                initials: "RT",
+                name: "Rosa Tran",
+                id: "20237821",
+                programme: "Finance",
+                status: "Absent",
+                avatarClass: "bg-secondary-container text-secondary",
+              },
+            ],
+          },
+          MKT101: {
+            courseName: "Digital Marketing 101",
+            students: [
+              {
+                initials: "AN",
+                name: "Ava Nolan",
+                id: "20240515",
+                programme: "Marketing",
+                status: "Present",
+                avatarClass: "bg-primary-fixed text-primary",
+              },
+              {
+                initials: "DB",
+                name: "Daniel Brooks",
+                id: "20240392",
+                programme: "Business Admin",
+                status: "Present",
+                avatarClass: "bg-secondary-container text-primary",
+              },
+              {
+                initials: "SP",
+                name: "Sophia Price",
+                id: "20240981",
+                programme: "Marketing",
+                status: "Absent",
+                avatarClass: "bg-tertiary-fixed text-on-tertiary-fixed-variant",
+              },
+              {
+                initials: "KO",
+                name: "Kevin Obi",
+                id: "20241224",
+                programme: "Mass Communication",
+                status: "Present",
+                avatarClass: "bg-surface-container text-on-surface-variant",
+              },
+            ],
+          },
+          STAT202: {
+            courseName: "Advanced Statistics",
+            students: [
+              {
+                initials: "IR",
+                name: "Irene Ross",
+                id: "20239912",
+                programme: "Statistics",
+                status: "Present",
+                avatarClass: "bg-primary-fixed text-primary",
+              },
+              {
+                initials: "TN",
+                name: "Tobi Nwosu",
+                id: "20240731",
+                programme: "Computer Science",
+                status: "Present",
+                avatarClass: "bg-secondary-container text-primary",
+              },
+              {
+                initials: "MH",
+                name: "Mina Hayes",
+                id: "20240208",
+                programme: "Mathematics",
+                status: "Absent",
+                avatarClass: "bg-tertiary-fixed text-on-tertiary-fixed-variant",
+              },
+            ],
+          },
+          CS210: {
+            courseName: "Data Structures",
+            students: [
+              {
+                initials: "JC",
+                name: "Jason Cole",
+                id: "20241010",
+                programme: "Computer Science",
+                status: "Present",
+                avatarClass: "bg-primary-fixed text-primary",
+              },
+              {
+                initials: "EO",
+                name: "Esther Okafor",
+                id: "20240876",
+                programme: "Computer Science",
+                status: "Present",
+                avatarClass: "bg-secondary-container text-primary",
+              },
+              {
+                initials: "PM",
+                name: "Philip Moore",
+                id: "20240632",
+                programme: "Software Engineering",
+                status: "Absent",
+                avatarClass: "bg-tertiary-fixed text-on-tertiary-fixed-variant",
+              },
+              {
+                initials: "ZA",
+                name: "Zara Ahmed",
+                id: "20241345",
+                programme: "Computer Science",
+                status: "Present",
+                avatarClass: "bg-surface-container text-on-surface-variant",
+              },
+            ],
+          },
+        };
+
+        const courseSelect = document.getElementById("courseSelect");
+        const tableBody = document.getElementById("recordsTableBody");
+        const recordHeading = document.getElementById("recordHeading");
+        const downloadPdfBtn = document.getElementById("downloadPdf");
+
+        function getStatusBadge(status) {
+          if (status === "Present") {
+            return `
+          <span class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-bold bg-primary-fixed text-on-primary-fixed-variant">
+            <span class="material-symbols-outlined text-lg">check_circle</span>
+            Present
+          </span>
+        `;
+          }
+
+          return `
+        <span class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-bold bg-error-container text-on-error-container">
+          <span class="material-symbols-outlined text-lg">cancel</span>
+          Absent
+        </span>
+      `;
+        }
+
+        function renderCourse(courseCode) {
+          const course = records[courseCode];
+          if (!course) return;
+
+          recordHeading.textContent = `Attendance Record · ${course.courseName}`;
+
+          tableBody.innerHTML = course.students
+            .map(
+              (student) => `
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start md:items-center px-4 py-4 rounded-xl hover:bg-surface-container-high transition-all">
+              <div class="md:col-span-5 flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold shrink-0 ${student.avatarClass}">
+                  ${student.initials}
+                </div>
+                <div class="min-w-0">
+                  <span class="font-semibold text-on-surface block truncate">${student.name}</span>
+                  <span class="text-xs text-on-surface-variant">ID: ${student.id}</span>
+                </div>
+              </div>
+
+              <div class="md:col-span-3 text-sm text-on-surface-variant">
+                <span class="md:hidden font-semibold text-on-surface">Programme: </span>
+                ${student.programme}
+              </div>
+
+              <div class="md:col-span-4 flex md:justify-center">
+                ${getStatusBadge(student.status)}
+              </div>
+            </div>
+          `,
+            )
+            .join("");
+        }
+
+        function downloadAttendancePdf() {
+          const selectedCourseCode = courseSelect.value;
+          const course = records[selectedCourseCode];
+          if (!course) return;
+
           const { jsPDF } = window.jspdf;
           const doc = new jsPDF();
 
-          const course = document.getElementById("recordHeading").textContent;
-          doc.setFontSize(14);
-          doc.text(course, 10, 10);
+          const pageWidth = doc.internal.pageSize.getWidth();
+          const generatedDate = new Date().toLocaleString();
 
-          let y = 20;
+          const totalStudents = course.students.length;
+          const presentCount = course.students.filter(
+            (student) => student.status === "Present",
+          ).length;
+          const absentCount = totalStudents - presentCount;
 
-          const rows = document.querySelectorAll("#recordsTableBody > div");
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(18);
+          doc.text("Attendance Report", 14, 18);
 
-          rows.forEach((row) => {
-            const name = row.querySelector(".font-semibold").textContent;
-            const id = row.querySelector(".text-xs").textContent;
-            const programme = row.querySelectorAll("div")[1].textContent.trim();
-            const status = row.innerText.includes("Present")
-              ? "Present"
-              : "Absent";
+          doc.setFont("helvetica", "normal");
+          doc.setFontSize(11);
+          doc.text(`Course: ${course.courseName}`, 14, 28);
+          doc.text(`Course Code: ${selectedCourseCode}`, 14, 35);
+          doc.text(`Generated: ${generatedDate}`, 14, 42);
 
-            doc.setFontSize(10);
-            doc.text(`${name} (${id})`, 10, y);
-            doc.text(programme, 80, y);
-            doc.text(status, 160, y);
+          doc.text(`Total Students: ${totalStudents}`, 140, 28);
+          doc.text(`Present: ${presentCount}`, 140, 35);
+          doc.text(`Absent: ${absentCount}`, 140, 42);
 
-            y += 8;
+          const tableRows = course.students.map((student, index) => [
+            index + 1,
+            student.name,
+            student.id,
+            student.programme,
+            student.status,
+          ]);
+
+          doc.autoTable({
+            startY: 52,
+            head: [
+              ["S/N", "Student Name", "Student ID", "Programme", "Status"],
+            ],
+            body: tableRows,
+            theme: "grid",
+            styles: {
+              fontSize: 10,
+              cellPadding: 4,
+              valign: "middle",
+            },
+            headStyles: {
+              fillColor: [1, 107, 85],
+              textColor: [255, 255, 255],
+              fontStyle: "bold",
+            },
+            bodyStyles: {
+              textColor: [27, 27, 28],
+            },
+            alternateRowStyles: {
+              fillColor: [245, 245, 245],
+            },
+            columnStyles: {
+              0: { halign: "center", cellWidth: 14 },
+              1: { cellWidth: 48 },
+              2: { halign: "center", cellWidth: 30 },
+              3: { cellWidth: 55 },
+              4: { halign: "center", cellWidth: 28 },
+            },
+            didParseCell: function (data) {
+              if (data.section === "body" && data.column.index === 4) {
+                const status = data.cell.raw;
+                if (status === "Present") {
+                  data.cell.styles.textColor = [0, 97, 76];
+                  data.cell.styles.fontStyle = "bold";
+                } else if (status === "Absent") {
+                  data.cell.styles.textColor = [186, 26, 26];
+                  data.cell.styles.fontStyle = "bold";
+                }
+              }
+            },
           });
 
-          doc.save("attendance-records.pdf");
+          const finalY = doc.lastAutoTable.finalY || 60;
+          doc.setFontSize(10);
+          doc.setTextColor(110, 122, 116);
+          doc.text(
+            "Generated from University Portal Attendance Records",
+            14,
+            finalY + 12,
+          );
+
+          const fileName = `${selectedCourseCode}-attendance-report.pdf`;
+          doc.save(fileName);
+        }
+
+        courseSelect.addEventListener("change", function () {
+          renderCourse(this.value);
         });
+
+        if (downloadPdfBtn) {
+          downloadPdfBtn.addEventListener("click", downloadAttendancePdf);
+        }
+
+        renderCourse(courseSelect.value);
+      })();
     </script>
   </body>
 </html>
