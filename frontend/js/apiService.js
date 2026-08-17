@@ -1,6 +1,10 @@
 // apiService.js
 
-const BASE_URL = 'http://127.0.0.1:8000/api';
+// Determine environment: production vs development
+const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+const BASE_URL = isProduction
+  ? 'https://attendance-system-auod.onrender.com/api'
+  : 'http://127.0.0.1:8000/api';
 
 const apiService = {
   // Get stored token from localStorage
