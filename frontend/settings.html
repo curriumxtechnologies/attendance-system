@@ -83,442 +83,508 @@
       };
     </script>
     <style>
-      body {
-        font-family: "Inter", sans-serif;
-      }
-      h1,
-      h2,
-      h3,
-      .display-font {
-        font-family: "Manrope", sans-serif;
-      }
+      body { font-family: "Inter", sans-serif; }
+      h1, h2, h3, .display-font { font-family: "Manrope", sans-serif; }
       .material-symbols-outlined {
-        font-variation-settings:
-          "FILL" 0,
-          "wght" 400,
-          "GRAD" 0,
-          "opsz" 24;
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
         vertical-align: middle;
       }
-      .soft-shadow {
-        box-shadow: 0 12px 32px -4px rgba(27, 27, 28, 0.06);
-      }
+      .soft-shadow { box-shadow: 0 12px 32px -4px rgba(27, 27, 28, 0.06); }
       .glass-nav {
         background: rgba(255, 255, 255, 0.8);
         backdrop-filter: blur(12px);
       }
-      .no-scrollbar::-webkit-scrollbar {
-        display: none;
-      }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
       .sidebar-transition {
-        transition:
-          transform 0.3s ease,
-          opacity 0.3s ease;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+      }
+      .avatar-upload {
+        position: relative;
+        display: inline-block;
+      }
+      .avatar-upload input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+        border-radius: 9999px;
+      }
+      .avatar-upload:hover .overlay {
+        opacity: 1;
+      }
+      .overlay {
+        position: absolute;
+        inset: 0;
+        border-radius: 9999px;
+        background: rgba(0,0,0,0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        color: white;
       }
     </style>
   </head>
   <body class="bg-background text-on-surface overflow-x-hidden">
     <div class="flex min-h-screen">
       <!-- Mobile Overlay -->
-      <div
-        id="sidebarOverlay"
-        class="fixed inset-0 bg-black/40 z-40 hidden lg:hidden"
-      ></div>
+      <div id="sidebarOverlay" class="fixed inset-0 bg-black/40 z-40 hidden lg:hidden"></div>
 
       <!-- Sidebar -->
-      <aside
-        id="sidebar"
-        class="sidebar-transition fixed top-0 left-0 z-50 h-screen w-72 max-w-[85vw] bg-surface border-r border-outline-variant/20 flex flex-col -translate-x-full lg:translate-x-0 lg:sticky lg:top-0 lg:z-auto"
-      >
-        <div
-          class="p-6 sm:p-8 flex items-center justify-between gap-4 border-b border-outline-variant/10 lg:border-b-0"
-        >
+      <aside id="sidebar" class="sidebar-transition fixed top-0 left-0 z-50 h-screen w-72 max-w-[85vw] bg-surface border-r border-outline-variant/20 flex flex-col -translate-x-full lg:translate-x-0 lg:sticky lg:top-0 lg:z-auto">
+        <div class="p-6 sm:p-8 flex items-center justify-between gap-4 border-b border-outline-variant/10 lg:border-b-0">
           <div class="flex items-center gap-4">
-            <div
-              class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-on-primary"
-            >
+            <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-on-primary">
               <span class="material-symbols-outlined">school</span>
             </div>
             <div>
-              <h2 class="text-on-surface font-headline font-bold leading-tight">
-                University Portal
-              </h2>
-              <p class="text-on-surface-variant text-xs font-body">
-                Lecturer Access
-              </p>
+              <h2 class="text-on-surface font-headline font-bold leading-tight">University Portal</h2>
+              <p class="text-on-surface-variant text-xs font-body">Lecturer Access</p>
             </div>
           </div>
-
-          <button
-            id="closeSidebar"
-            type="button"
-            class="lg:hidden w-10 h-10 rounded-full hover:bg-surface-container flex items-center justify-center"
-            aria-label="Close menu"
-          >
+          <button id="closeSidebar" type="button" class="lg:hidden w-10 h-10 rounded-full hover:bg-surface-container flex items-center justify-center" aria-label="Close menu">
             <span class="material-symbols-outlined">close</span>
           </button>
         </div>
 
-        <nav
-          class="flex-1 px-4 py-4 space-y-2 mt-2 lg:mt-4 overflow-y-auto no-scrollbar"
-        >
-          <a
-            class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all"
-            href="dashboard.html"
-          >
+        <nav class="flex-1 px-4 py-4 space-y-2 mt-2 lg:mt-4 overflow-y-auto no-scrollbar">
+          <a class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all" href="dashboard.html">
             <span class="material-symbols-outlined">dashboard</span>
             <span class="font-body">Dashboard</span>
           </a>
-
-          <a
-            class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all"
-            href="mark-attendance.html"
-          >
+          <a class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all" href="mark-attendance.html">
             <span class="material-symbols-outlined">fact_check</span>
             <span class="font-body">Mark Attendance</span>
           </a>
-
-          <a
-            class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all"
-            href="attendance-records.html"
-          >
+          <a class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all" href="attendance-records.html">
             <span class="material-symbols-outlined">analytics</span>
             <span class="font-body">Attendance Records</span>
           </a>
-
-          <a
-            class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all"
-            href="attendance-eligibility.html"
-          >
+          <a class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all" href="attendance-eligibility.html">
             <span class="material-symbols-outlined">rule</span>
             <span class="font-body">Attendance Eligibility</span>
           </a>
-
-          <a
-            class="flex items-center gap-4 px-4 py-3 rounded-xl bg-secondary-container text-primary font-medium transition-all mt-8"
-            href="settings.html"
-          >
+          <a class="flex items-center gap-4 px-4 py-3 rounded-xl bg-secondary-container text-primary font-medium transition-all mt-8" href="settings.html">
             <span class="material-symbols-outlined">settings</span>
             <span class="font-body">Settings</span>
             <div class="ml-auto w-1 h-6 bg-primary rounded-full"></div>
           </a>
-
-          <a
-            class="flex items-center gap-4 px-4 py-3 rounded-xl text-error hover:bg-error-container/10 transition-all"
-            href="#"
-          >
+          <button id="logoutBtn" class="flex items-center gap-4 w-full px-4 py-3 rounded-xl text-error hover:bg-error-container/10 transition-all">
             <span class="material-symbols-outlined">logout</span>
             <span class="font-body">Logout</span>
-          </a>
+          </button>
         </nav>
       </aside>
 
       <!-- Main Content -->
       <main class="flex-1 flex flex-col min-w-0 w-full">
-        <header
-          class="h-auto min-h-20 glass-nav border-b border-outline-variant/10 px-4 sm:px-6 lg:px-10 py-4 lg:py-0 flex items-center sticky top-0 z-30"
-        >
+        <header class="h-auto min-h-20 glass-nav border-b border-outline-variant/10 px-4 sm:px-6 lg:px-10 py-4 lg:py-0 flex items-center sticky top-0 z-30">
           <div class="flex items-center gap-3 sm:gap-4 flex-1">
-            <button
-              id="openSidebar"
-              type="button"
-              class="lg:hidden w-11 h-11 rounded-full bg-surface-container-low hover:bg-surface-container flex items-center justify-center shrink-0"
-              aria-label="Open menu"
-            >
+            <button id="openSidebar" type="button" class="lg:hidden w-11 h-11 rounded-full bg-surface-container-low hover:bg-surface-container flex items-center justify-center shrink-0" aria-label="Open menu">
               <span class="material-symbols-outlined">menu</span>
             </button>
-
             <div class="relative w-full max-w-md">
-              <span
-                class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg"
-                >search</span
-              >
-              <input
-                class="w-full bg-surface-container-low border-none rounded-full py-2.5 pl-12 pr-4 sm:pr-6 text-sm focus:ring-2 focus:ring-primary/20 transition-all"
-                placeholder="Search settings..."
-                type="text"
-              />
+              <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
+              <input class="w-full bg-surface-container-low border-none rounded-full py-2.5 pl-12 pr-4 sm:pr-6 text-sm focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search settings..." type="text" />
+            </div>
+            <div class="flex items-center gap-2 ml-auto">
+              <span id="lecturerNameDisplay" class="text-sm font-semibold hidden sm:inline">Lecturer</span>
+              <div class="w-9 h-9 rounded-full bg-primary-container/20 flex items-center justify-center text-primary font-bold">
+                <span id="lecturerInitial">L</span>
+              </div>
             </div>
           </div>
         </header>
 
-        <div
-          class="p-4 sm:p-6 lg:p-10 space-y-6 sm:space-y-8 overflow-y-auto no-scrollbar pb-8 sm:pb-10"
-        >
+        <div class="p-4 sm:p-6 lg:p-10 space-y-6 sm:space-y-8 overflow-y-auto no-scrollbar pb-8 sm:pb-10">
           <!-- Page heading -->
           <div>
-            <h2
-              class="text-2xl sm:text-3xl font-headline font-bold text-on-surface tracking-tight"
-            >
-              Settings
-            </h2>
-            <p
-              class="text-on-surface-variant font-body mt-1 text-sm sm:text-base"
-            >
-              View lecturer details and change password.
-            </p>
+            <h2 class="text-2xl sm:text-3xl font-headline font-bold text-on-surface tracking-tight">Settings</h2>
+            <p class="text-on-surface-variant font-body mt-1 text-sm sm:text-base">View and update your profile, password, and preferences.</p>
           </div>
 
           <!-- Lecturer details -->
-          <div
-            class="bg-surface-container-lowest rounded-xl soft-shadow p-5 sm:p-6 lg:p-8"
-          >
+          <div class="bg-surface-container-lowest rounded-xl soft-shadow p-5 sm:p-6 lg:p-8">
             <div class="flex items-center gap-4 mb-6">
-              <h3 class="text-base sm:text-lg font-headline font-semibold">
-                Lecturer Details
-              </h3>
+              <h3 class="text-base sm:text-lg font-headline font-semibold">Lecturer Details</h3>
             </div>
 
             <div class="flex flex-col sm:flex-row sm:items-start gap-5 mb-8">
-              <img
-                class="w-20 h-20 rounded-full object-cover border-4 border-primary/10"
-                alt="Dr. Julian Vance"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3r_2VPSHQcarjkPv6dsKrxDObu2lk4-ghhecbRk_XKVBMOXGypaMPcFjpqaaPqjION1MWQPbNYxYzu9KpkUSLZ15nAgqf4Tfn_WJs_9kuq2pj6THJNKCI9HAKym9CjZ4h9jGiDuHIb5dYvzvrU_J6HpH3uM8TjuLuh-ZmRMWbIUVWUhJ41a2-03UHhD3QY1CT_lkweJzrY7-2CemXgOLgJtf24cr8SejyjLH_oxViFiPfmcWiLiMi9J7F9N5Rdoh_duf0KAdRBTw"
-              />
-              <div>
-                <h4 class="text-xl sm:text-2xl font-headline font-bold">
-                  Dr. Julian Vance
-                </h4>
-                <p class="text-on-surface-variant mt-1 text-sm sm:text-base">
-                  Senior Lecturer · Faculty of Social Sciences
-                </p>
+              <!-- Profile picture with upload -->
+              <div class="avatar-upload shrink-0">
+                <img id="profileImage"
+                  class="w-20 h-20 rounded-full object-cover border-4 border-primary/10"
+                  alt="Profile picture"
+                  src="https://ui-avatars.com/api/?name=User&background=00604c&color=fff&size=80"
+                />
+                <div class="overlay">
+                  <span class="material-symbols-outlined text-2xl">photo_camera</span>
+                </div>
+                <input id="profilePicInput" type="file" accept="image/*" />
               </div>
+              <div>
+                <h4 id="lecturerFullName" class="text-xl sm:text-2xl font-headline font-bold">Loading…</h4>
+                <p id="lecturerRole" class="text-on-surface-variant mt-1 text-sm sm:text-base">Lecturer</p>
+              </div>
+              <button id="updatePicBtn" class="ml-auto self-start px-4 py-2 bg-primary/10 text-primary rounded-xl font-semibold hover:bg-primary/20 transition-all text-sm hidden">
+                Update Picture
+              </button>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
-              <div
-                class="bg-surface-container-low rounded-xl p-5 border border-outline-variant/10"
-              >
-                <p class="text-sm text-on-surface-variant mb-1">Full Name</p>
-                <p class="font-semibold text-on-surface">Dr. Julian Vance</p>
-              </div>
-
-              <div
-                class="bg-surface-container-low rounded-xl p-5 border border-outline-variant/10"
-              >
-                <p class="text-sm text-on-surface-variant mb-1">Staff ID</p>
-                <p class="font-semibold text-on-surface">LCT-20481</p>
-              </div>
-
-              <div
-                class="bg-surface-container-low rounded-xl p-5 border border-outline-variant/10"
-              >
-                <p class="text-sm text-on-surface-variant mb-1">
-                  Email Address
-                </p>
-                <p
-                  class="font-semibold text-on-surface break-all sm:break-normal"
-                >
-                  julian.vance@university.edu
-                </p>
-              </div>
-
-              <div
-                class="bg-surface-container-low rounded-xl p-5 border border-outline-variant/10"
-              >
-                <p class="text-sm text-on-surface-variant mb-1">Department</p>
-                <p class="font-semibold text-on-surface">Economics</p>
-              </div>
+            <div id="detailsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+              <!-- Rows injected by JS -->
             </div>
           </div>
 
           <!-- Change password -->
-          <div
-            class="bg-surface-container-lowest rounded-xl soft-shadow p-5 sm:p-6 lg:p-8"
-          >
+          <div class="bg-surface-container-lowest rounded-xl soft-shadow p-5 sm:p-6 lg:p-8">
             <div class="flex items-center gap-4 mb-6">
-              <h3 class="text-base sm:text-lg font-headline font-semibold">
-                Change Password
-              </h3>
+              <h3 class="text-base sm:text-lg font-headline font-semibold">Change Password</h3>
             </div>
 
             <!-- collapsed password row -->
-            <div
-              id="passwordSummary"
-              class="flex items-center justify-between gap-4 bg-surface-container-low rounded-xl p-4 sm:p-5 border border-outline-variant/10"
-            >
+            <div id="passwordSummary" class="flex items-center justify-between gap-4 bg-surface-container-low rounded-xl p-4 sm:p-5 border border-outline-variant/10">
               <div class="min-w-0">
                 <p class="text-sm text-on-surface-variant mb-1">Password</p>
-                <p
-                  class="font-semibold text-on-surface tracking-[0.3em] truncate"
-                >
-                  ••••••••••••
-                </p>
+                <p class="font-semibold text-on-surface tracking-[0.3em] truncate">••••••••••••</p>
               </div>
-
-              <button
-                id="editPasswordBtn"
-                type="button"
-                class="w-11 h-11 rounded-full bg-surface-container-high hover:bg-secondary-container transition-all flex items-center justify-center text-primary shrink-0"
-                aria-label="Edit password"
-              >
+              <button id="editPasswordBtn" type="button" class="w-11 h-11 rounded-full bg-surface-container-high hover:bg-secondary-container transition-all flex items-center justify-center text-primary shrink-0" aria-label="Edit password">
                 <span class="material-symbols-outlined">edit</span>
               </button>
             </div>
 
-            <!-- hidden full form -->
-            <form class="space-y-5 max-w-2xl hidden mt-6" id="passwordForm">
+            <!-- full form -->
+            <form id="passwordForm" class="space-y-5 max-w-2xl hidden mt-6">
               <div>
-                <label
-                  class="block text-sm font-semibold text-on-surface mb-2"
-                  for="currentPassword"
-                  >Current Password</label
-                >
-                <input
-                  id="currentPassword"
-                  type="password"
-                  class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 text-on-surface font-medium focus:ring-2 focus:ring-primary"
-                  placeholder="Enter current password"
-                />
+                <label class="block text-sm font-semibold text-on-surface mb-2" for="currentPassword">Current Password</label>
+                <input id="currentPassword" type="password" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 text-on-surface font-medium focus:ring-2 focus:ring-primary" placeholder="Enter current password" required />
               </div>
-
               <div>
-                <label
-                  class="block text-sm font-semibold text-on-surface mb-2"
-                  for="newPassword"
-                  >New Password</label
-                >
-                <input
-                  id="newPassword"
-                  type="password"
-                  class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 text-on-surface font-medium focus:ring-2 focus:ring-primary"
-                  placeholder="Enter new password"
-                />
+                <label class="block text-sm font-semibold text-on-surface mb-2" for="newPassword">New Password</label>
+                <input id="newPassword" type="password" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 text-on-surface font-medium focus:ring-2 focus:ring-primary" placeholder="Enter new password (min 6 chars)" required />
               </div>
-
               <div>
-                <label
-                  class="block text-sm font-semibold text-on-surface mb-2"
-                  for="confirmPassword"
-                  >Confirm New Password</label
-                >
-                <input
-                  id="confirmPassword"
-                  type="password"
-                  class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 text-on-surface font-medium focus:ring-2 focus:ring-primary"
-                  placeholder="Confirm new password"
-                />
+                <label class="block text-sm font-semibold text-on-surface mb-2" for="confirmPassword">Confirm New Password</label>
+                <input id="confirmPassword" type="password" class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 text-on-surface font-medium focus:ring-2 focus:ring-primary" placeholder="Confirm new password" required />
               </div>
-
               <div class="flex flex-col sm:flex-row sm:items-center gap-3 pt-2">
-                <button
-                  type="submit"
-                  class="w-full sm:w-auto bg-primary text-on-primary px-6 sm:px-8 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-primary-container transition-all"
-                >
-                  <span class="material-symbols-outlined">lock_reset</span>
-                  Update Password
+                <button type="submit" class="w-full sm:w-auto bg-primary text-on-primary px-6 sm:px-8 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-primary-container transition-all">
+                  <span class="material-symbols-outlined">lock_reset</span> Update Password
                 </button>
-
-                <button
-                  id="cancelPasswordBtn"
-                  type="button"
-                  class="w-full sm:w-auto px-6 py-3 rounded-xl font-semibold bg-surface-container-high text-on-surface hover:bg-surface-container transition-all"
-                >
-                  Cancel
-                </button>
+                <button id="cancelPasswordBtn" type="button" class="w-full sm:w-auto px-6 py-3 rounded-xl font-semibold bg-surface-container-high text-on-surface hover:bg-surface-container transition-all">Cancel</button>
               </div>
-
-              <p
-                id="passwordMessage"
-                class="hidden text-sm font-medium rounded-lg px-4 py-3"
-              ></p>
+              <p id="passwordMessage" class="hidden text-sm font-medium rounded-lg px-4 py-3"></p>
             </form>
           </div>
+
+          <!-- Two-Factor Authentication -->
+          <div class="bg-surface-container-lowest rounded-xl soft-shadow p-5 sm:p-6 lg:p-8">
+            <div class="flex items-center justify-between gap-4">
+              <div>
+                <h3 class="text-base sm:text-lg font-headline font-semibold">Two-Factor Authentication</h3>
+                <p class="text-sm text-on-surface-variant mt-1">Enhance security with 2FA – an OTP will be sent to your email on login.</p>
+              </div>
+              <div class="relative inline-block w-12 h-6">
+                <input id="twoFactorToggle" type="checkbox" class="peer sr-only" />
+                <label for="twoFactorToggle" class="block w-12 h-6 bg-surface-container-high rounded-full cursor-pointer transition-colors peer-checked:bg-primary">
+                  <span class="block w-5 h-5 bg-white rounded-full shadow transform transition-transform duration-200 translate-x-0.5 peer-checked:translate-x-6"></span>
+                </label>
+              </div>
+            </div>
+            <p id="twoFactorStatus" class="text-xs text-on-surface-variant mt-2">Loading status…</p>
+          </div>
+
+          <!-- Message area -->
+          <div id="messageArea" class="hidden text-sm font-medium rounded-lg px-4 py-3"></div>
         </div>
       </main>
     </div>
 
-    <script src="js/sidebar-menu.js"></script>
-
+    <!-- ─── Sidebar toggle ────────────────────────────────────── -->
     <script>
-      (function () {
-        const editPasswordBtn = document.getElementById("editPasswordBtn");
-        const cancelPasswordBtn = document.getElementById("cancelPasswordBtn");
-        const passwordSummary = document.getElementById("passwordSummary");
-        const form = document.getElementById("passwordForm");
-        const currentPassword = document.getElementById("currentPassword");
-        const newPassword = document.getElementById("newPassword");
-        const confirmPassword = document.getElementById("confirmPassword");
-        const message = document.getElementById("passwordMessage");
+      (function() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const openBtn = document.getElementById('openSidebar');
+        const closeBtn = document.getElementById('closeSidebar');
+        function openSidebar() { sidebar.classList.remove('-translate-x-full'); overlay.classList.remove('hidden'); }
+        function closeSidebar() { sidebar.classList.add('-translate-x-full'); overlay.classList.add('hidden'); }
+        if (openBtn) openBtn.addEventListener('click', openSidebar);
+        if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+        if (overlay) overlay.addEventListener('click', closeSidebar);
+      })();
+    </script>
 
-        function hideMessage() {
-          message.classList.add("hidden");
-          message.classList.remove(
-            "bg-error-container",
-            "text-on-error-container",
-            "bg-primary-fixed",
-            "text-on-primary-fixed-variant",
-          );
-          message.textContent = "";
+    <!-- ─── Import map ────────────────────────────────────────── -->
+    <script type="importmap">
+      {
+        "imports": {
+          "./js/": "./js/"
+        }
+      }
+    </script>
+
+    <script type="module">
+      import userService from './js/userService.js';
+      import apiService from './js/apiService.js';
+
+      // ─── DOM refs ─────────────────────────────────────────────
+      const lecturerFullName = document.getElementById('lecturerFullName');
+      const lecturerRole = document.getElementById('lecturerRole');
+      const lecturerNameDisplay = document.getElementById('lecturerNameDisplay');
+      const lecturerInitial = document.getElementById('lecturerInitial');
+      const profileImage = document.getElementById('profileImage');
+      const profilePicInput = document.getElementById('profilePicInput');
+      const updatePicBtn = document.getElementById('updatePicBtn');
+      const detailsGrid = document.getElementById('detailsGrid');
+      const messageArea = document.getElementById('messageArea');
+
+      // Password
+      const passwordSummary = document.getElementById('passwordSummary');
+      const editPasswordBtn = document.getElementById('editPasswordBtn');
+      const cancelPasswordBtn = document.getElementById('cancelPasswordBtn');
+      const passwordForm = document.getElementById('passwordForm');
+      const currentPassword = document.getElementById('currentPassword');
+      const newPassword = document.getElementById('newPassword');
+      const confirmPassword = document.getElementById('confirmPassword');
+      const passwordMessage = document.getElementById('passwordMessage');
+
+      // 2FA
+      const twoFactorToggle = document.getElementById('twoFactorToggle');
+      const twoFactorStatus = document.getElementById('twoFactorStatus');
+
+      // Logout
+      const logoutBtn = document.getElementById('logoutBtn');
+
+      // ─── Helpers ──────────────────────────────────────────────
+      function showMessage(text, isError = true) {
+        messageArea.classList.remove('hidden', 'bg-primary-fixed', 'text-on-primary-fixed-variant', 'bg-error-container', 'text-on-error-container');
+        if (isError) {
+          messageArea.classList.add('bg-error-container', 'text-on-error-container');
+        } else {
+          messageArea.classList.add('bg-primary-fixed', 'text-on-primary-fixed-variant');
+        }
+        messageArea.textContent = text;
+      }
+      function hideMessage() {
+        messageArea.classList.add('hidden');
+        messageArea.textContent = '';
+      }
+
+      function showPasswordMessage(text, isError = true) {
+        passwordMessage.classList.remove('hidden', 'bg-primary-fixed', 'text-on-primary-fixed-variant', 'bg-error-container', 'text-on-error-container');
+        if (isError) {
+          passwordMessage.classList.add('bg-error-container', 'text-on-error-container');
+        } else {
+          passwordMessage.classList.add('bg-primary-fixed', 'text-on-primary-fixed-variant');
+        }
+        passwordMessage.textContent = text;
+      }
+      function hidePasswordMessage() {
+        passwordMessage.classList.add('hidden');
+        passwordMessage.textContent = '';
+      }
+
+      function getInitials(name) {
+        if (!name) return 'L';
+        return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+      }
+
+      // ─── Auth check ──────────────────────────────────────────
+      const token = apiService.getToken();
+      if (!token) { window.location.href = 'index.html'; }
+
+      // ─── State ────────────────────────────────────────────────
+      let lecturerData = null;
+
+      // ─── Load lecturer data ──────────────────────────────────
+      async function loadLecturer() {
+        try {
+          const res = await userService.getMe();
+          if (!res.success || !res.lecturer) throw new Error('Failed to load lecturer data');
+          lecturerData = res.lecturer;
+          renderLecturer(lecturerData);
+        } catch (error) {
+          console.error('Load lecturer error:', error);
+          showMessage('Failed to load your data. Please refresh.', true);
+        }
+      }
+
+      // ─── Render lecturer details ────────────────────────────
+      function renderLecturer(data) {
+        const name = data.fullName || 'Lecturer';
+        lecturerFullName.textContent = name;
+        lecturerNameDisplay.textContent = name;
+        lecturerInitial.textContent = getInitials(name);
+        lecturerRole.textContent = data.role ? data.role.charAt(0).toUpperCase() + data.role.slice(1) : 'Lecturer';
+
+        // Profile picture
+        if (data.profilePicture) {
+          profileImage.src = data.profilePicture;
+        } else {
+          profileImage.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=00604c&color=fff&size=80`;
         }
 
-        editPasswordBtn.addEventListener("click", function () {
-          passwordSummary.classList.add("hidden");
-          form.classList.remove("hidden");
-          hideMessage();
-        });
+        // Details grid
+        const fields = [
+          { label: 'Full Name', value: data.fullName || '—' },
+          { label: 'Staff ID', value: data.staffId || '—' },
+          { label: 'Email Address', value: data.email || '—' },
+          { label: 'Courses', value: Array.isArray(data.courses) ? data.courses.join(', ') : '—' },
+        ];
+        detailsGrid.innerHTML = fields.map(f => `
+          <div class="bg-surface-container-low rounded-xl p-5 border border-outline-variant/10">
+            <p class="text-sm text-on-surface-variant mb-1">${f.label}</p>
+            <p class="font-semibold text-on-surface break-all">${f.value}</p>
+          </div>
+        `).join('');
 
-        cancelPasswordBtn.addEventListener("click", function () {
-          form.classList.add("hidden");
-          passwordSummary.classList.remove("hidden");
-          form.reset();
-          hideMessage();
-        });
+        // 2FA toggle
+        twoFactorToggle.checked = !!data.twoFactorEnabled;
+        twoFactorStatus.textContent = data.twoFactorEnabled
+          ? 'Two-factor authentication is currently ENABLED.'
+          : 'Two-factor authentication is currently DISABLED.';
+        twoFactorStatus.className = `text-xs mt-2 ${data.twoFactorEnabled ? 'text-primary' : 'text-on-surface-variant'}`;
+      }
 
-        form.addEventListener("submit", function (e) {
-          e.preventDefault();
+      // ─── Profile picture upload ─────────────────────────────
+      profilePicInput.addEventListener('change', async function() {
+        if (!this.files || this.files.length === 0) return;
+        const file = this.files[0];
+        if (file.size > 2 * 1024 * 1024) {
+          showMessage('Image size must be under 2MB.', true);
+          this.value = '';
+          return;
+        }
+        // Show preview
+        const reader = new FileReader();
+        reader.onload = (e) => { profileImage.src = e.target.result; };
+        reader.readAsDataURL(file);
 
-          hideMessage();
-          message.classList.remove("hidden");
-
-          if (
-            !currentPassword.value.trim() ||
-            !newPassword.value.trim() ||
-            !confirmPassword.value.trim()
-          ) {
-            message.textContent = "Please fill in all password fields.";
-            message.classList.add(
-              "bg-error-container",
-              "text-on-error-container",
-            );
-            return;
+        // Upload
+        const formData = new FormData();
+        formData.append('profilePicture', file);
+        try {
+          const res = await userService.updateProfile(formData);
+          if (res.success) {
+            showMessage('Profile picture updated successfully!', false);
+            // Refresh lecturer data
+            await loadLecturer();
+          } else {
+            showMessage(res.message || 'Failed to update picture.', true);
           }
+        } catch (error) {
+          showMessage(error.message || 'Error uploading picture.', true);
+        }
+        this.value = '';
+      });
 
-          if (newPassword.value.length < 6) {
-            message.textContent =
-              "New password must be at least 6 characters long.";
-            message.classList.add(
-              "bg-error-container",
-              "text-on-error-container",
-            );
-            return;
+      // ─── Password change ─────────────────────────────────────
+      editPasswordBtn.addEventListener('click', () => {
+        passwordSummary.classList.add('hidden');
+        passwordForm.classList.remove('hidden');
+        hidePasswordMessage();
+        currentPassword.value = '';
+        newPassword.value = '';
+        confirmPassword.value = '';
+      });
+
+      cancelPasswordBtn.addEventListener('click', () => {
+        passwordForm.classList.add('hidden');
+        passwordSummary.classList.remove('hidden');
+        hidePasswordMessage();
+        passwordForm.reset();
+      });
+
+      passwordForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hidePasswordMessage();
+
+        const current = currentPassword.value.trim();
+        const newPwd = newPassword.value.trim();
+        const confirm = confirmPassword.value.trim();
+
+        if (!current || !newPwd || !confirm) {
+          showPasswordMessage('Please fill in all password fields.', true);
+          return;
+        }
+        if (newPwd.length < 6) {
+          showPasswordMessage('New password must be at least 6 characters long.', true);
+          return;
+        }
+        if (newPwd !== confirm) {
+          showPasswordMessage('New password and confirm password do not match.', true);
+          return;
+        }
+
+        // Use updateProfile to change password – the API expects `password` field
+        const formData = new FormData();
+        formData.append('password', newPwd);
+        // Note: current password is not sent to backend? In your controller you don't have current password check – we might need to add it later.
+        // For now we assume the API uses the new password only.
+        // Alternatively, if your backend requires current password, you need to extend the updateProfile endpoint.
+        // We'll send a simple password update.
+
+        try {
+          const res = await userService.updateProfile(formData);
+          if (res.success) {
+            showPasswordMessage('Password updated successfully!', false);
+            passwordForm.reset();
+            setTimeout(() => {
+              passwordForm.classList.add('hidden');
+              passwordSummary.classList.remove('hidden');
+              hidePasswordMessage();
+            }, 1500);
+          } else {
+            showPasswordMessage(res.message || 'Failed to update password.', true);
           }
+        } catch (error) {
+          showPasswordMessage(error.message || 'Error updating password.', true);
+        }
+      });
 
-          if (newPassword.value !== confirmPassword.value) {
-            message.textContent =
-              "New password and confirm password do not match.";
-            message.classList.add(
-              "bg-error-container",
-              "text-on-error-container",
-            );
-            return;
+      // ─── Toggle 2FA ──────────────────────────────────────────
+      twoFactorToggle.addEventListener('change', async function() {
+        const enabled = this.checked;
+        // Show loading state
+        twoFactorStatus.textContent = 'Updating…';
+        twoFactorStatus.className = 'text-xs mt-2 text-on-surface-variant';
+
+        try {
+          const res = await userService.toggle2FA();
+          if (res.success) {
+            twoFactorStatus.textContent = res.message || (enabled
+              ? 'Two-factor authentication is now ENABLED.'
+              : 'Two-factor authentication is now DISABLED.');
+            twoFactorStatus.className = `text-xs mt-2 ${enabled ? 'text-primary' : 'text-on-surface-variant'}`;
+            showMessage('Two-factor authentication preference updated.', false);
+          } else {
+            // Revert toggle
+            this.checked = !enabled;
+            twoFactorStatus.textContent = res.message || 'Failed to update 2FA status.';
+            twoFactorStatus.className = 'text-xs mt-2 text-error';
+            showMessage(res.message || 'Failed to update 2FA.', true);
           }
+        } catch (error) {
+          this.checked = !enabled;
+          twoFactorStatus.textContent = error.message || 'Error toggling 2FA.';
+          twoFactorStatus.className = 'text-xs mt-2 text-error';
+          showMessage(error.message || 'Error updating 2FA.', true);
+        }
+      });
 
-          message.textContent = "Password updated successfully. (Demo only)";
-          message.classList.add(
-            "bg-primary-fixed",
-            "text-on-primary-fixed-variant",
-          );
+      // ─── Logout ──────────────────────────────────────────────
+      logoutBtn.addEventListener('click', async () => {
+        try { await userService.logout(); } catch (e) {}
+        apiService.setToken(null);
+        window.location.href = 'index.html';
+      });
 
-          form.reset();
-
-          setTimeout(() => {
-            form.classList.add("hidden");
-            passwordSummary.classList.remove("hidden");
-            hideMessage();
-          }, 1500);
-        });
-      })();
+      // ─── Init ──────────────────────────────────────────────────
+      if (token) {
+        loadLecturer();
+      }
     </script>
   </body>
 </html>

@@ -83,780 +83,805 @@
       };
     </script>
     <style>
-      body {
-        font-family: "Inter", sans-serif;
-      }
-      h1,
-      h2,
-      h3,
-      .display-font {
-        font-family: "Manrope", sans-serif;
-      }
+      body { font-family: "Inter", sans-serif; }
+      h1, h2, h3, .display-font { font-family: "Manrope", sans-serif; }
       .material-symbols-outlined {
-        font-variation-settings:
-          "FILL" 0,
-          "wght" 400,
-          "GRAD" 0,
-          "opsz" 24;
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
         vertical-align: middle;
       }
-      .soft-shadow {
-        box-shadow: 0 12px 32px -4px rgba(27, 27, 28, 0.06);
-      }
+      .soft-shadow { box-shadow: 0 12px 32px -4px rgba(27, 27, 28, 0.06); }
       .glass-nav {
         background: rgba(255, 255, 255, 0.8);
         backdrop-filter: blur(12px);
       }
-      .no-scrollbar::-webkit-scrollbar {
-        display: none;
-      }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
       .sidebar-transition {
-        transition:
-          transform 0.3s ease,
-          opacity 0.3s ease;
+        transition: transform 0.3s ease, opacity 0.3s ease;
       }
+
+      /* Custom dropdown */
+      .custom-dropdown {
+        position: relative;
+        width: 100%;
+        max-width: 220px;
+      }
+      .custom-dropdown-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        background: #eae7e7;
+        border: none;
+        border-radius: 0.75rem;
+        padding: 0.75rem 1rem;
+        font-weight: 500;
+        color: #1b1b1c;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .custom-dropdown-toggle:hover { background: #dcd9d9; }
+      .custom-dropdown-toggle .arrow { transition: transform 0.25s ease; }
+      .custom-dropdown-toggle.open .arrow { transform: rotate(180deg); }
+      .custom-dropdown-menu {
+        position: absolute;
+        top: calc(100% + 6px);
+        left: 0;
+        width: 100%;
+        background: #ffffff;
+        border-radius: 0.75rem;
+        box-shadow: 0 12px 32px -4px rgba(27,27,28,0.15);
+        max-height: 220px;
+        overflow-y: auto;
+        z-index: 50;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-6px);
+        transition: all 0.2s ease;
+        padding: 0.25rem;
+      }
+      .custom-dropdown-menu.open {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+      .custom-dropdown-item {
+        display: block;
+        width: 100%;
+        padding: 0.6rem 1rem;
+        border-radius: 0.5rem;
+        text-align: left;
+        font-weight: 500;
+        color: #1b1b1c;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .custom-dropdown-item:hover { background: #eae7e7; }
+      .custom-dropdown-item.active { background: #9ef3d7; color: #005140; }
+
+      /* Date chips */
+      .date-chip {
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: #eae7e7;
+        color: #3e4945;
+      }
+      .date-chip:hover { background: #dcd9d9; }
+      .date-chip.active { background: #00604c; color: #ffffff; box-shadow: 0 4px 12px rgba(0,96,76,0.25); }
+      .date-chip.warning { background: #ffdad6; color: #93000a; }
+      .date-chip.warning:hover { background: #ffcbc6; }
+
+      /* Date input */
+      .date-picker {
+        background: #eae7e7;
+        border: none;
+        border-radius: 0.75rem;
+        padding: 0.7rem 1rem;
+        font-weight: 500;
+        color: #1b1b1c;
+        cursor: pointer;
+        transition: background 0.2s;
+        min-width: 150px;
+      }
+      .date-picker:hover { background: #dcd9d9; }
+      .date-picker:focus { outline: 2px solid #00604c; }
+
+      /* Modal */
+      .modal-overlay {
+        background: rgba(0,0,0,0.45);
+        backdrop-filter: blur(4px);
+        animation: fadeIn 0.2s ease;
+      }
+      .modal-card { animation: slideUp 0.25s ease; }
+      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes slideUp { from { opacity: 0; transform: translateY(20px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
     </style>
   </head>
   <body class="bg-background text-on-surface overflow-x-hidden">
     <div class="flex min-h-screen">
       <!-- Mobile Overlay -->
-      <div
-        id="sidebarOverlay"
-        class="fixed inset-0 bg-black/40 z-40 hidden lg:hidden"
-      ></div>
+      <div id="sidebarOverlay" class="fixed inset-0 bg-black/40 z-40 hidden lg:hidden"></div>
 
       <!-- Sidebar -->
-      <aside
-        id="sidebar"
-        class="sidebar-transition fixed top-0 left-0 z-50 h-screen w-72 max-w-[85vw] bg-surface border-r border-outline-variant/20 flex flex-col -translate-x-full lg:translate-x-0 lg:sticky lg:top-0 lg:z-auto"
-      >
-        <div
-          class="p-6 sm:p-8 flex items-center justify-between gap-4 border-b border-outline-variant/10 lg:border-b-0"
-        >
+      <aside id="sidebar" class="sidebar-transition fixed top-0 left-0 z-50 h-screen w-72 max-w-[85vw] bg-surface border-r border-outline-variant/20 flex flex-col -translate-x-full lg:translate-x-0 lg:sticky lg:top-0 lg:z-auto">
+        <div class="p-6 sm:p-8 flex items-center justify-between gap-4 border-b border-outline-variant/10 lg:border-b-0">
           <div class="flex items-center gap-4">
-            <div
-              class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-on-primary"
-            >
+            <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-on-primary">
               <span class="material-symbols-outlined">school</span>
             </div>
             <div>
-              <h2 class="text-on-surface font-headline font-bold leading-tight">
-                University Portal
-              </h2>
-              <p class="text-on-surface-variant text-xs font-body">
-                Lecturer Access
-              </p>
+              <h2 class="text-on-surface font-headline font-bold leading-tight">University Portal</h2>
+              <p class="text-on-surface-variant text-xs font-body">Lecturer Access</p>
             </div>
           </div>
-
-          <button
-            id="closeSidebar"
-            type="button"
-            class="lg:hidden w-10 h-10 rounded-full hover:bg-surface-container flex items-center justify-center"
-            aria-label="Close menu"
-          >
+          <button id="closeSidebar" type="button" class="lg:hidden w-10 h-10 rounded-full hover:bg-surface-container flex items-center justify-center" aria-label="Close menu">
             <span class="material-symbols-outlined">close</span>
           </button>
         </div>
 
-        <nav
-          class="flex-1 px-4 py-4 space-y-2 mt-2 lg:mt-4 overflow-y-auto no-scrollbar"
-        >
-          <a
-            class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all"
-            href="dashboard.html"
-          >
+        <nav class="flex-1 px-4 py-4 space-y-2 mt-2 lg:mt-4 overflow-y-auto no-scrollbar">
+          <a class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all" href="dashboard.html">
             <span class="material-symbols-outlined">dashboard</span>
             <span class="font-body">Dashboard</span>
           </a>
-
-          <a
-            class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all"
-            href="mark-attendance.html"
-          >
+          <a class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all" href="mark-attendance.html">
             <span class="material-symbols-outlined">fact_check</span>
             <span class="font-body">Mark Attendance</span>
           </a>
-
-          <a
-            class="flex items-center gap-4 px-4 py-3 rounded-xl bg-secondary-container text-primary font-medium transition-all"
-            href="attendance-records.html"
-          >
+          <a class="flex items-center gap-4 px-4 py-3 rounded-xl bg-secondary-container text-primary font-medium transition-all" href="attendance-records.html">
             <span class="material-symbols-outlined">analytics</span>
             <span class="font-body">Attendance Records</span>
             <div class="ml-auto w-1 h-6 bg-primary rounded-full"></div>
           </a>
-
-          <a
-            class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all"
-            href="attendance-eligibility.html"
-          >
+          <a class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all" href="attendance-eligibility.html">
             <span class="material-symbols-outlined">rule</span>
             <span class="font-body">Attendance Eligibility</span>
           </a>
-
-          <a
-            class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all mt-8"
-            href="settings.html"
-          >
+          <a class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all mt-8" href="settings.html">
             <span class="material-symbols-outlined">settings</span>
             <span class="font-body">Settings</span>
           </a>
-
-          <a
-            class="flex items-center gap-4 px-4 py-3 rounded-xl text-error hover:bg-error-container/10 transition-all"
-            href="#"
-          >
+          <button id="logoutBtn" class="flex items-center gap-4 w-full px-4 py-3 rounded-xl text-error hover:bg-error-container/10 transition-all">
             <span class="material-symbols-outlined">logout</span>
             <span class="font-body">Logout</span>
-          </a>
+          </button>
         </nav>
       </aside>
 
       <!-- Main Content -->
       <main class="flex-1 flex flex-col min-w-0 w-full">
-        <header
-          class="h-auto min-h-20 glass-nav border-b border-outline-variant/10 px-4 sm:px-6 lg:px-10 py-4 lg:py-0 flex items-center sticky top-0 z-30"
-        >
+        <header class="h-auto min-h-20 glass-nav border-b border-outline-variant/10 px-4 sm:px-6 lg:px-10 py-4 lg:py-0 flex items-center sticky top-0 z-30">
           <div class="flex items-center gap-3 sm:gap-4 flex-1">
-            <button
-              id="openSidebar"
-              type="button"
-              class="lg:hidden w-11 h-11 rounded-full bg-surface-container-low hover:bg-surface-container flex items-center justify-center shrink-0"
-              aria-label="Open menu"
-            >
+            <button id="openSidebar" type="button" class="lg:hidden w-11 h-11 rounded-full bg-surface-container-low hover:bg-surface-container flex items-center justify-center shrink-0" aria-label="Open menu">
               <span class="material-symbols-outlined">menu</span>
             </button>
-
             <div class="relative w-full max-w-md">
-              <span
-                class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg"
-                >search</span
-              >
-              <input
-                class="w-full bg-surface-container-low border-none rounded-full py-2.5 pl-12 pr-4 sm:pr-6 text-sm focus:ring-2 focus:ring-primary/20 transition-all"
-                placeholder="Search for students, courses, or records..."
-                type="text"
-              />
+              <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
+              <input class="w-full bg-surface-container-low border-none rounded-full py-2.5 pl-12 pr-4 sm:pr-6 text-sm focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search for students, courses, or records..." type="text" />
+            </div>
+            <div class="flex items-center gap-2 ml-auto">
+              <span id="lecturerNameDisplay" class="text-sm font-semibold hidden sm:inline">Lecturer</span>
+              <div class="w-9 h-9 rounded-full bg-primary-container/20 flex items-center justify-center text-primary font-bold">
+                <span id="lecturerInitial">L</span>
+              </div>
             </div>
           </div>
         </header>
 
-        <div
-          class="p-4 sm:p-6 lg:p-10 space-y-6 sm:space-y-8 overflow-y-auto no-scrollbar pb-8 sm:pb-10"
-        >
+        <div class="p-4 sm:p-6 lg:p-10 space-y-6 sm:space-y-8 overflow-y-auto no-scrollbar pb-8 sm:pb-10">
           <!-- Page heading -->
           <div>
-            <h2
-              class="text-2xl sm:text-3xl font-headline font-bold text-on-surface tracking-tight"
-            >
-              Attendance Records
-            </h2>
-            <p
-              class="text-on-surface-variant font-body mt-1 text-sm sm:text-base"
-            >
-              Select a course to view students marked present or absent.
-            </p>
+            <h2 class="text-2xl sm:text-3xl font-headline font-bold text-on-surface tracking-tight">Attendance Records</h2>
+            <p class="text-on-surface-variant font-body mt-1 text-sm sm:text-base">Select a course and date to view attendance records.</p>
           </div>
 
-          <!-- Course select -->
-          <div
-            class="bg-surface-container-lowest p-5 sm:p-6 lg:p-8 rounded-xl soft-shadow space-y-4 sm:space-y-6"
-          >
-            <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
-              <h3 class="text-base sm:text-lg font-headline font-semibold">
-                Select a course
-              </h3>
-              <div class="relative inline-block w-full sm:w-72">
-                <select
-                  class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 text-on-surface font-medium focus:ring-2 focus:ring-primary appearance-none"
-                  id="courseSelect"
-                >
-                  <option value="ECO101" selected>
-                    Intro to Macroeconomics
-                  </option>
-                  <option value="MKT101">Digital Marketing 101</option>
-                  <option value="STAT202">Advanced Statistics</option>
-                  <option value="CS210">Data Structures</option>
-                </select>
+          <!-- Selection controls -->
+          <div class="bg-surface-container-lowest p-5 sm:p-6 lg:p-8 rounded-xl soft-shadow space-y-5">
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:flex-wrap">
+              <!-- Custom Course Dropdown -->
+              <div class="custom-dropdown" id="courseDropdown">
+                <button type="button" class="custom-dropdown-toggle" id="courseToggle">
+                  <span id="courseSelectedLabel">Select course…</span>
+                  <span class="material-symbols-outlined arrow">expand_more</span>
+                </button>
+                <div class="custom-dropdown-menu" id="courseMenu"></div>
               </div>
+
+              <!-- Date chips -->
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="text-sm text-on-surface-variant font-medium mr-1">Date:</span>
+                <button type="button" class="date-chip active" data-offset="0">Today</button>
+                <button type="button" class="date-chip warning" data-offset="1">Yesterday</button>
+                <button type="button" class="date-chip warning" data-offset="7">Last Week</button>
+              </div>
+
+              <!-- Date picker -->
+              <input type="date" id="datePicker" class="date-picker" />
+
+              <button id="refreshBtn" class="px-6 py-2.5 bg-primary/10 text-primary rounded-full font-semibold hover:bg-primary/20 transition-all flex items-center gap-2 ml-auto">
+                <span class="material-symbols-outlined">refresh</span> Load
+              </button>
             </div>
+
+            <!-- Warning for past date (manual pick) -->
+            <div id="pastDateWarning" class="hidden text-sm text-error bg-error-container/30 px-4 py-2 rounded-lg flex items-center gap-2">
+              <span class="material-symbols-outlined text-lg">warning</span>
+              <span>You are viewing records for a past date. Confirm this is intentional.</span>
+            </div>
+
+            <div id="recordInfo" class="text-sm text-on-surface-variant hidden">Loading records…</div>
           </div>
 
-          <!-- Attendance records -->
-          <div
-            class="bg-surface-container-lowest rounded-xl soft-shadow p-4 sm:p-6 lg:p-8"
-          >
+          <!-- Attendance records table -->
+          <div class="bg-surface-container-lowest rounded-xl soft-shadow p-4 sm:p-6 lg:p-8">
             <div class="flex items-center justify-between gap-4 mb-5 sm:mb-6">
-              <h3
-                class="text-base sm:text-lg font-headline font-semibold"
-                id="recordHeading"
-              >
-                Attendance Record · Intro to Macroeconomics
-              </h3>
-
-              <button
-                id="downloadPdf"
-                type="button"
-                class="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-white hover:opacity-90 transition-all"
-              >
-                <span class="material-symbols-outlined text-lg">download</span>
+              <h3 class="text-base sm:text-lg font-headline font-semibold" id="recordHeading">Attendance Record</h3>
+              <button id="downloadPdf" type="button" class="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-bold text-white hover:opacity-90 transition-all">
+                <span class="material-symbols-outlined text-lg">download</span> PDF
               </button>
             </div>
 
             <!-- Desktop table header -->
-            <div
-              class="hidden md:grid grid-cols-12 gap-4 px-4 py-3 bg-surface-container-low rounded-lg mb-2 text-xs font-label uppercase tracking-wider text-on-surface-variant font-bold"
-            >
+            <div class="hidden md:grid grid-cols-12 gap-4 px-4 py-3 bg-surface-container-low rounded-lg mb-2 text-xs font-label uppercase tracking-wider text-on-surface-variant font-bold">
               <div class="col-span-5">Student Name & ID</div>
               <div class="col-span-3">Programme</div>
               <div class="col-span-4 text-center">Attendance Status</div>
             </div>
 
-            <div class="space-y-3 md:space-y-1" id="recordsTableBody">
-              <!-- rows injected by JS -->
+            <div id="recordsTableBody" class="space-y-3 md:space-y-1">
+              <!-- Rows injected by JS -->
             </div>
           </div>
+
+          <!-- Message area -->
+          <div id="messageArea" class="hidden text-sm font-medium rounded-lg px-4 py-3"></div>
         </div>
       </main>
     </div>
 
-    <script src="js/sidebar-menu.js"></script>
+    <!-- ─── CONFIRMATION MODAL ─── -->
+    <div id="confirmModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
+      <div class="modal-card bg-surface-container-lowest rounded-2xl p-6 max-w-md w-full soft-shadow">
+        <div class="flex items-start gap-4 mb-4">
+          <div class="w-12 h-12 rounded-full bg-error-container/30 flex items-center justify-center text-error shrink-0">
+            <span class="material-symbols-outlined text-2xl">warning</span>
+          </div>
+          <div>
+            <h3 class="text-xl font-headline font-bold text-on-surface" id="modalTitle">View past attendance?</h3>
+            <p class="text-sm text-on-surface-variant mt-1" id="modalMessage">
+              You are about to view attendance for <strong id="modalDateDisplay">Yesterday</strong>.
+            </p>
+          </div>
+        </div>
+        <div class="flex gap-3 mt-2">
+          <button id="modalCancelBtn" class="flex-1 bg-surface-container-high text-on-surface py-2.5 rounded-xl font-semibold hover:bg-surface-container transition-all">Cancel</button>
+          <button id="modalConfirmBtn" class="flex-1 bg-error text-on-error py-2.5 rounded-xl font-semibold hover:bg-error/80 transition-all">Yes, view records</button>
+        </div>
+      </div>
+    </div>
 
+    <!-- ─── SCRIPTS ─── -->
     <script>
-      (function () {
-        const records = {
-          ECO101: {
-            courseName: "Intro to Macroeconomics",
-            students: [
-              {
-                initials: "MK",
-                name: "Maya Kaur",
-                id: "20240087",
-                programme: "Economics",
-                status: "Present",
-                avatarClass: "bg-secondary-container text-primary",
-              },
-              {
-                initials: "LS",
-                name: "Liam Sterling",
-                id: "20240112",
-                programme: "Marketing",
-                status: "Absent",
-                avatarClass: "bg-tertiary-fixed text-on-tertiary-fixed-variant",
-              },
-              {
-                initials: "JA",
-                name: "Jared Ames",
-                id: "20239874",
-                programme: "Statistics",
-                status: "Present",
-                avatarClass: "bg-surface-container text-on-surface-variant",
-              },
-              {
-                initials: "EM",
-                name: "Elena Moretti",
-                id: "20241103",
-                programme: "Economics",
-                status: "Present",
-                avatarClass: "bg-primary-fixed text-primary",
-              },
-              {
-                initials: "RT",
-                name: "Rosa Tran",
-                id: "20237821",
-                programme: "Finance",
-                status: "Absent",
-                avatarClass: "bg-secondary-container text-secondary",
-              },
-            ],
-          },
-          MKT101: {
-            courseName: "Digital Marketing 101",
-            students: [
-              {
-                initials: "AN",
-                name: "Ava Nolan",
-                id: "20240515",
-                programme: "Marketing",
-                status: "Present",
-                avatarClass: "bg-primary-fixed text-primary",
-              },
-              {
-                initials: "DB",
-                name: "Daniel Brooks",
-                id: "20240392",
-                programme: "Business Admin",
-                status: "Present",
-                avatarClass: "bg-secondary-container text-primary",
-              },
-              {
-                initials: "SP",
-                name: "Sophia Price",
-                id: "20240981",
-                programme: "Marketing",
-                status: "Absent",
-                avatarClass: "bg-tertiary-fixed text-on-tertiary-fixed-variant",
-              },
-              {
-                initials: "KO",
-                name: "Kevin Obi",
-                id: "20241224",
-                programme: "Mass Communication",
-                status: "Present",
-                avatarClass: "bg-surface-container text-on-surface-variant",
-              },
-            ],
-          },
-          STAT202: {
-            courseName: "Advanced Statistics",
-            students: [
-              {
-                initials: "IR",
-                name: "Irene Ross",
-                id: "20239912",
-                programme: "Statistics",
-                status: "Present",
-                avatarClass: "bg-primary-fixed text-primary",
-              },
-              {
-                initials: "TN",
-                name: "Tobi Nwosu",
-                id: "20240731",
-                programme: "Computer Science",
-                status: "Present",
-                avatarClass: "bg-secondary-container text-primary",
-              },
-              {
-                initials: "MH",
-                name: "Mina Hayes",
-                id: "20240208",
-                programme: "Mathematics",
-                status: "Absent",
-                avatarClass: "bg-tertiary-fixed text-on-tertiary-fixed-variant",
-              },
-            ],
-          },
-          CS210: {
-            courseName: "Data Structures",
-            students: [
-              {
-                initials: "JC",
-                name: "Jason Cole",
-                id: "20241010",
-                programme: "Computer Science",
-                status: "Present",
-                avatarClass: "bg-primary-fixed text-primary",
-              },
-              {
-                initials: "EO",
-                name: "Esther Okafor",
-                id: "20240876",
-                programme: "Computer Science",
-                status: "Present",
-                avatarClass: "bg-secondary-container text-primary",
-              },
-              {
-                initials: "PM",
-                name: "Philip Moore",
-                id: "20240632",
-                programme: "Software Engineering",
-                status: "Absent",
-                avatarClass: "bg-tertiary-fixed text-on-tertiary-fixed-variant",
-              },
-              {
-                initials: "ZA",
-                name: "Zara Ahmed",
-                id: "20241345",
-                programme: "Computer Science",
-                status: "Present",
-                avatarClass: "bg-surface-container text-on-surface-variant",
-              },
-            ],
-          },
-        };
+      (function() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const openBtn = document.getElementById('openSidebar');
+        const closeBtn = document.getElementById('closeSidebar');
+        function openSidebar() { sidebar.classList.remove('-translate-x-full'); overlay.classList.remove('hidden'); }
+        function closeSidebar() { sidebar.classList.add('-translate-x-full'); overlay.classList.add('hidden'); }
+        if (openBtn) openBtn.addEventListener('click', openSidebar);
+        if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+        if (overlay) overlay.addEventListener('click', closeSidebar);
+      })();
+    </script>
 
-        const courseSelect = document.getElementById("courseSelect");
-        const tableBody = document.getElementById("recordsTableBody");
-        const recordHeading = document.getElementById("recordHeading");
+    <script type="importmap">
+      {
+        "imports": {
+          "./js/": "./js/"
+        }
+      }
+    </script>
 
-        function getStatusBadge(status) {
-          if (status === "Present") {
-            return `
+    <!-- PDF libs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+
+    <script type="module">
+      import userService from './js/userService.js';
+      import attendanceService from './js/attendanceService.js';
+      import apiService from './js/apiService.js';
+
+      // ─── DOM refs ─────────────────────────────────────────────
+      const courseToggle = document.getElementById('courseToggle');
+      const courseMenu = document.getElementById('courseMenu');
+      const courseSelectedLabel = document.getElementById('courseSelectedLabel');
+      const dateChips = document.querySelectorAll('.date-chip');
+      const datePicker = document.getElementById('datePicker');
+      const refreshBtn = document.getElementById('refreshBtn');
+      const recordHeading = document.getElementById('recordHeading');
+      const recordInfo = document.getElementById('recordInfo');
+      const recordsTableBody = document.getElementById('recordsTableBody');
+      const messageArea = document.getElementById('messageArea');
+      const downloadPdfBtn = document.getElementById('downloadPdf');
+      const lecturerNameDisplay = document.getElementById('lecturerNameDisplay');
+      const lecturerInitial = document.getElementById('lecturerInitial');
+      const pastDateWarning = document.getElementById('pastDateWarning');
+
+      // Modal
+      const confirmModal = document.getElementById('confirmModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalMessage = document.getElementById('modalMessage');
+      const modalDateDisplay = document.getElementById('modalDateDisplay');
+      const modalCancelBtn = document.getElementById('modalCancelBtn');
+      const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+
+      // ─── Helpers ──────────────────────────────────────────────
+      function showMessage(text, isError = true) {
+        messageArea.classList.remove('hidden', 'bg-primary-fixed', 'text-on-primary-fixed-variant', 'bg-error-container', 'text-on-error-container');
+        if (isError) {
+          messageArea.classList.add('bg-error-container', 'text-on-error-container');
+        } else {
+          messageArea.classList.add('bg-primary-fixed', 'text-on-primary-fixed-variant');
+        }
+        messageArea.textContent = text;
+      }
+      function hideMessage() {
+        messageArea.classList.add('hidden');
+        messageArea.textContent = '';
+      }
+      function getInitials(name) {
+        if (!name) return 'L';
+        return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+      }
+      function formatDateDisplay(dateStr) {
+        if (!dateStr) return 'N/A';
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+      }
+      function isPastDate(dateStr) {
+        if (!dateStr) return false;
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        const check = new Date(dateStr);
+        check.setHours(0,0,0,0);
+        return check < today;
+      }
+
+      // ─── Auth check ──────────────────────────────────────────
+      const token = apiService.getToken();
+      if (!token) { window.location.href = 'index.html'; }
+
+      // ─── State ────────────────────────────────────────────────
+      let lecturerData = null;
+      let currentCourse = null;
+      let currentDate = null;
+      let currentRecords = [];
+      let pendingDateChange = null;
+
+      // ─── Custom dropdown ──────────────────────────────────────
+      function toggleDropdown(open) {
+        const isOpen = courseMenu.classList.contains('open');
+        if (open === undefined) {
+          courseMenu.classList.toggle('open');
+          courseToggle.classList.toggle('open');
+        } else if (open && !isOpen) {
+          courseMenu.classList.add('open');
+          courseToggle.classList.add('open');
+        } else if (!open && isOpen) {
+          courseMenu.classList.remove('open');
+          courseToggle.classList.remove('open');
+        }
+      }
+      courseToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleDropdown();
+      });
+      document.addEventListener('click', () => { toggleDropdown(false); });
+      courseMenu.addEventListener('click', (e) => { e.stopPropagation(); });
+
+      function renderCourseDropdown(courses, selected) {
+        if (!courses || courses.length === 0) {
+          courseMenu.innerHTML = `<button class="custom-dropdown-item" disabled>No courses assigned</button>`;
+          courseSelectedLabel.textContent = 'No courses';
+          return;
+        }
+        courseMenu.innerHTML = courses.map(c => `
+          <button class="custom-dropdown-item ${c === selected ? 'active' : ''}" data-course="${c}">${c}</button>
+        `).join('');
+        if (selected) {
+          courseSelectedLabel.textContent = selected;
+        } else {
+          courseSelectedLabel.textContent = courses[0] || 'Select course…';
+        }
+        courseMenu.querySelectorAll('.custom-dropdown-item').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const course = this.dataset.course;
+            if (course && course !== currentCourse) {
+              currentCourse = course;
+              courseSelectedLabel.textContent = course;
+              courseMenu.querySelectorAll('.custom-dropdown-item').forEach(b => b.classList.remove('active'));
+              this.classList.add('active');
+              toggleDropdown(false);
+              if (currentDate) {
+                loadAttendance(currentCourse, currentDate);
+              }
+            } else {
+              toggleDropdown(false);
+            }
+          });
+        });
+      }
+
+      // ─── Date chips ───────────────────────────────────────────
+      function setDateFromOffset(offset) {
+        const now = new Date();
+        const target = new Date(now);
+        target.setDate(target.getDate() - offset);
+        target.setHours(0,0,0,0);
+        const iso = target.toISOString().slice(0,10);
+        datePicker.value = iso;
+        // deactivate all chips
+        dateChips.forEach(chip => chip.classList.remove('active'));
+        // activate matching chip if any
+        dateChips.forEach(chip => {
+          const chipOffset = parseInt(chip.dataset.offset, 10);
+          if (chipOffset === offset) chip.classList.add('active');
+        });
+        return iso;
+      }
+
+      // Click chip → set date and load
+      dateChips.forEach(chip => {
+        chip.addEventListener('click', function() {
+          const offset = parseInt(this.dataset.offset, 10);
+          const dateStr = setDateFromOffset(offset);
+          // Check if past date – show warning modal for yesterday/last week
+          if (offset > 0) {
+            const label = this.textContent.trim();
+            modalDateDisplay.textContent = label + ' (' + formatDateDisplay(dateStr) + ')';
+            modalTitle.textContent = 'View past attendance records?';
+            modalMessage.innerHTML = `
+              You are about to view attendance for <strong>${label}</strong> (${formatDateDisplay(dateStr)}).
+              These records are from a past session.
+            `;
+            pendingDateChange = { dateStr, label };
+            confirmModal.classList.remove('hidden');
+            return;
+          }
+          // Today – load directly
+          currentDate = dateStr;
+          if (currentCourse) {
+            loadAttendance(currentCourse, dateStr);
+          }
+        });
+      });
+
+      // ─── Modal ────────────────────────────────────────────────
+      function closeModal() {
+        confirmModal.classList.add('hidden');
+        pendingDateChange = null;
+      }
+      modalCancelBtn.addEventListener('click', closeModal);
+      confirmModal.addEventListener('click', (e) => {
+        if (e.target === confirmModal) closeModal();
+      });
+      modalConfirmBtn.addEventListener('click', function() {
+        if (!pendingDateChange) return;
+        const { dateStr, label } = pendingDateChange;
+        currentDate = dateStr;
+        // Also set the date picker and chips
+        datePicker.value = dateStr;
+        dateChips.forEach(chip => {
+          chip.classList.remove('active');
+          if (chip.textContent.trim() === label) chip.classList.add('active');
+        });
+        closeModal();
+        if (currentCourse) {
+          loadAttendance(currentCourse, dateStr);
+        }
+      });
+
+      // ─── Date picker manual change ───────────────────────────
+      datePicker.addEventListener('change', function() {
+        const val = this.value;
+        if (!val) return;
+        // Deactivate all chips
+        dateChips.forEach(chip => chip.classList.remove('active'));
+        // Check if any chip matches this date
+        let matched = false;
+        dateChips.forEach(chip => {
+          const offset = parseInt(chip.dataset.offset, 10);
+          const now = new Date();
+          const target = new Date(now);
+          target.setDate(target.getDate() - offset);
+          target.setHours(0,0,0,0);
+          const iso = target.toISOString().slice(0,10);
+          if (iso === val) {
+            chip.classList.add('active');
+            matched = true;
+          }
+        });
+        // If no chip matches, we just keep none active.
+        // Show past warning if date is before today
+        if (isPastDate(val)) {
+          pastDateWarning.classList.remove('hidden');
+          // Ask for confirmation via modal
+          modalDateDisplay.textContent = formatDateDisplay(val);
+          modalTitle.textContent = 'View past attendance records?';
+          modalMessage.innerHTML = `
+            You are about to view attendance for <strong>${formatDateDisplay(val)}</strong>.
+            These records are from a past session.
+          `;
+          pendingDateChange = { dateStr: val, label: formatDateDisplay(val) };
+          confirmModal.classList.remove('hidden');
+        } else {
+          pastDateWarning.classList.add('hidden');
+          currentDate = val;
+          if (currentCourse) {
+            loadAttendance(currentCourse, val);
+          }
+        }
+      });
+
+      // ─── Load lecturer ────────────────────────────────────────
+      async function loadLecturer() {
+        try {
+          const res = await userService.getMe();
+          if (!res.success || !res.lecturer) throw new Error('Failed to load lecturer data');
+          lecturerData = res.lecturer;
+          const name = lecturerData.fullName || 'Lecturer';
+          lecturerNameDisplay.textContent = name;
+          lecturerInitial.textContent = getInitials(name);
+
+          const courses = lecturerData.courses || [];
+          if (courses.length === 0) {
+            renderCourseDropdown([], null);
+            recordsTableBody.innerHTML = `<div class="text-center py-10 text-on-surface-variant">You are not assigned to any courses.</div>`;
+            recordHeading.textContent = 'No courses assigned';
+            return;
+          }
+
+          currentCourse = courses[0];
+          renderCourseDropdown(courses, currentCourse);
+
+          // Default today
+          const today = new Date().toISOString().slice(0,10);
+          datePicker.value = today;
+          currentDate = today;
+          dateChips.forEach(chip => {
+            chip.classList.remove('active');
+            if (parseInt(chip.dataset.offset, 10) === 0) chip.classList.add('active');
+          });
+          pastDateWarning.classList.add('hidden');
+
+          await loadAttendance(currentCourse, today);
+        } catch (error) {
+          console.error('Load lecturer error:', error);
+          showMessage('Failed to load your data. Please refresh.', true);
+        }
+      }
+
+      // ─── Load attendance ──────────────────────────────────────
+      async function loadAttendance(courseCode, dateStr) {
+        if (!courseCode || !dateStr) return;
+        hideMessage();
+        recordsTableBody.innerHTML = `<div class="text-center py-10 text-on-surface-variant">Loading records…</div>`;
+        recordHeading.textContent = `Loading…`;
+        recordInfo.classList.add('hidden');
+
+        try {
+          const res = await attendanceService.getAttendance(courseCode, dateStr);
+          let records = res.records || [];
+
+          if (!records || records.length === 0) {
+            recordsTableBody.innerHTML = `<div class="text-center py-10 text-on-surface-variant">No attendance records found for ${courseCode} on ${formatDateDisplay(dateStr)}.</div>`;
+            recordHeading.textContent = `${courseCode} · ${formatDateDisplay(dateStr)} (no records)`;
+            recordInfo.classList.remove('hidden');
+            recordInfo.textContent = `📋 No records for ${courseCode} on ${formatDateDisplay(dateStr)}`;
+            currentRecords = [];
+            return;
+          }
+
+          currentRecords = records;
+          renderRecords(records, courseCode, dateStr);
+          recordInfo.classList.remove('hidden');
+          const presentCount = records.filter(r => r.status === 'present').length;
+          const absentCount = records.filter(r => r.status === 'absent').length;
+          const excusedCount = records.filter(r => r.status === 'excused').length;
+          recordInfo.textContent = `📚 ${courseCode} · ${records.length} students · P:${presentCount} A:${absentCount} E:${excusedCount} · ${formatDateDisplay(dateStr)}`;
+
+          // Update warning visibility
+          if (isPastDate(dateStr)) {
+            pastDateWarning.classList.remove('hidden');
+          } else {
+            pastDateWarning.classList.add('hidden');
+          }
+
+        } catch (error) {
+          console.error('Load records error:', error);
+          recordsTableBody.innerHTML = `<div class="text-center py-10 text-error">Error loading records: ${error.message}</div>`;
+          showMessage('Failed to load records. Check console.', true);
+        }
+      }
+
+      // ─── Render records ──────────────────────────────────────
+      function renderRecords(records, courseCode, dateStr) {
+        if (!records || records.length === 0) {
+          recordsTableBody.innerHTML = `<div class="text-center py-10 text-on-surface-variant">No records to display.</div>`;
+          return;
+        }
+
+        const heading = `${courseCode} · ${formatDateDisplay(dateStr)}`;
+        recordHeading.textContent = heading;
+
+        let html = '';
+        records.forEach((r) => {
+          const student = r.student || {};
+          const name = student.fullName || 'Unknown';
+          const matric = student.matricNumber || '—';
+          const programme = student.department || '—';
+          const status = r.status || 'absent';
+          const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+          const isPresent = status === 'present';
+          const isAbsent = status === 'absent';
+          const isExcused = status === 'excused';
+
+          let badgeHtml;
+          if (isPresent) {
+            badgeHtml = `
               <span class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-bold bg-primary-fixed text-on-primary-fixed-variant">
-                <span class="material-symbols-outlined text-lg">check_circle</span>
-                Present
+                <span class="material-symbols-outlined text-lg">check_circle</span> Present
+              </span>
+            `;
+          } else if (isExcused) {
+            badgeHtml = `
+              <span class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-bold bg-tertiary-fixed text-on-tertiary-fixed-variant">
+                <span class="material-symbols-outlined text-lg">info</span> Excused
+              </span>
+            `;
+          } else {
+            badgeHtml = `
+              <span class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-bold bg-error-container text-on-error-container">
+                <span class="material-symbols-outlined text-lg">cancel</span> Absent
               </span>
             `;
           }
 
-          return `
-            <span class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-bold bg-error-container text-on-error-container">
-              <span class="material-symbols-outlined text-lg">cancel</span>
-              Absent
-            </span>
-          `;
-        }
-
-        function renderCourse(courseCode) {
-          const course = records[courseCode];
-          if (!course) return;
-
-          recordHeading.textContent = `Attendance Record · ${course.courseName}`;
-
-          tableBody.innerHTML = course.students
-            .map(
-              (student) => `
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start md:items-center px-4 py-4 rounded-xl hover:bg-surface-container-high transition-all">
-                  <div class="md:col-span-5 flex items-center gap-3 min-w-0">
-                    <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold shrink-0 ${student.avatarClass}">
-                      ${student.initials}
-                    </div>
-                    <div class="min-w-0">
-                      <span class="font-semibold text-on-surface block truncate">${student.name}</span>
-                      <span class="text-xs text-on-surface-variant">ID: ${student.id}</span>
-                    </div>
-                  </div>
-
-                  <div class="md:col-span-3 text-sm text-on-surface-variant">
-                    <span class="md:hidden font-semibold text-on-surface">Programme: </span>
-                    ${student.programme}
-                  </div>
-
-                  <div class="md:col-span-4 flex md:justify-center">
-                    ${getStatusBadge(student.status)}
-                  </div>
-                </div>
-              `,
-            )
-            .join("");
-        }
-
-        courseSelect.addEventListener("change", function () {
-          renderCourse(this.value);
-        });
-
-        renderCourse(courseSelect.value);
-      })();
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
-    <script>
-      (function () {
-        const records = {
-          ECO101: {
-            courseName: "Intro to Macroeconomics",
-            students: [
-              {
-                initials: "MK",
-                name: "Maya Kaur",
-                id: "20240087",
-                programme: "Economics",
-                status: "Present",
-                avatarClass: "bg-secondary-container text-primary",
-              },
-              {
-                initials: "LS",
-                name: "Liam Sterling",
-                id: "20240112",
-                programme: "Marketing",
-                status: "Absent",
-                avatarClass: "bg-tertiary-fixed text-on-tertiary-fixed-variant",
-              },
-              {
-                initials: "JA",
-                name: "Jared Ames",
-                id: "20239874",
-                programme: "Statistics",
-                status: "Present",
-                avatarClass: "bg-surface-container text-on-surface-variant",
-              },
-              {
-                initials: "EM",
-                name: "Elena Moretti",
-                id: "20241103",
-                programme: "Economics",
-                status: "Present",
-                avatarClass: "bg-primary-fixed text-primary",
-              },
-              {
-                initials: "RT",
-                name: "Rosa Tran",
-                id: "20237821",
-                programme: "Finance",
-                status: "Absent",
-                avatarClass: "bg-secondary-container text-secondary",
-              },
-            ],
-          },
-          MKT101: {
-            courseName: "Digital Marketing 101",
-            students: [
-              {
-                initials: "AN",
-                name: "Ava Nolan",
-                id: "20240515",
-                programme: "Marketing",
-                status: "Present",
-                avatarClass: "bg-primary-fixed text-primary",
-              },
-              {
-                initials: "DB",
-                name: "Daniel Brooks",
-                id: "20240392",
-                programme: "Business Admin",
-                status: "Present",
-                avatarClass: "bg-secondary-container text-primary",
-              },
-              {
-                initials: "SP",
-                name: "Sophia Price",
-                id: "20240981",
-                programme: "Marketing",
-                status: "Absent",
-                avatarClass: "bg-tertiary-fixed text-on-tertiary-fixed-variant",
-              },
-              {
-                initials: "KO",
-                name: "Kevin Obi",
-                id: "20241224",
-                programme: "Mass Communication",
-                status: "Present",
-                avatarClass: "bg-surface-container text-on-surface-variant",
-              },
-            ],
-          },
-          STAT202: {
-            courseName: "Advanced Statistics",
-            students: [
-              {
-                initials: "IR",
-                name: "Irene Ross",
-                id: "20239912",
-                programme: "Statistics",
-                status: "Present",
-                avatarClass: "bg-primary-fixed text-primary",
-              },
-              {
-                initials: "TN",
-                name: "Tobi Nwosu",
-                id: "20240731",
-                programme: "Computer Science",
-                status: "Present",
-                avatarClass: "bg-secondary-container text-primary",
-              },
-              {
-                initials: "MH",
-                name: "Mina Hayes",
-                id: "20240208",
-                programme: "Mathematics",
-                status: "Absent",
-                avatarClass: "bg-tertiary-fixed text-on-tertiary-fixed-variant",
-              },
-            ],
-          },
-          CS210: {
-            courseName: "Data Structures",
-            students: [
-              {
-                initials: "JC",
-                name: "Jason Cole",
-                id: "20241010",
-                programme: "Computer Science",
-                status: "Present",
-                avatarClass: "bg-primary-fixed text-primary",
-              },
-              {
-                initials: "EO",
-                name: "Esther Okafor",
-                id: "20240876",
-                programme: "Computer Science",
-                status: "Present",
-                avatarClass: "bg-secondary-container text-primary",
-              },
-              {
-                initials: "PM",
-                name: "Philip Moore",
-                id: "20240632",
-                programme: "Software Engineering",
-                status: "Absent",
-                avatarClass: "bg-tertiary-fixed text-on-tertiary-fixed-variant",
-              },
-              {
-                initials: "ZA",
-                name: "Zara Ahmed",
-                id: "20241345",
-                programme: "Computer Science",
-                status: "Present",
-                avatarClass: "bg-surface-container text-on-surface-variant",
-              },
-            ],
-          },
-        };
-
-        const courseSelect = document.getElementById("courseSelect");
-        const tableBody = document.getElementById("recordsTableBody");
-        const recordHeading = document.getElementById("recordHeading");
-        const downloadPdfBtn = document.getElementById("downloadPdf");
-
-        function getStatusBadge(status) {
-          if (status === "Present") {
-            return `
-          <span class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-bold bg-primary-fixed text-on-primary-fixed-variant">
-            <span class="material-symbols-outlined text-lg">check_circle</span>
-            Present
-          </span>
-        `;
-          }
-
-          return `
-        <span class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full text-sm font-bold bg-error-container text-on-error-container">
-          <span class="material-symbols-outlined text-lg">cancel</span>
-          Absent
-        </span>
-      `;
-        }
-
-        function renderCourse(courseCode) {
-          const course = records[courseCode];
-          if (!course) return;
-
-          recordHeading.textContent = `Attendance Record · ${course.courseName}`;
-
-          tableBody.innerHTML = course.students
-            .map(
-              (student) => `
+          html += `
             <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start md:items-center px-4 py-4 rounded-xl hover:bg-surface-container-high transition-all">
               <div class="md:col-span-5 flex items-center gap-3 min-w-0">
-                <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold shrink-0 ${student.avatarClass}">
-                  ${student.initials}
-                </div>
+                <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center font-bold shrink-0">${initials}</div>
                 <div class="min-w-0">
-                  <span class="font-semibold text-on-surface block truncate">${student.name}</span>
-                  <span class="text-xs text-on-surface-variant">ID: ${student.id}</span>
+                  <span class="font-semibold text-on-surface block truncate">${name}</span>
+                  <span class="text-xs text-on-surface-variant">ID: ${matric}</span>
                 </div>
               </div>
-
               <div class="md:col-span-3 text-sm text-on-surface-variant">
-                <span class="md:hidden font-semibold text-on-surface">Programme: </span>
-                ${student.programme}
+                <span class="md:hidden font-semibold text-on-surface">Programme: </span>${programme}
               </div>
-
-              <div class="md:col-span-4 flex md:justify-center">
-                ${getStatusBadge(student.status)}
-              </div>
+              <div class="md:col-span-4 flex md:justify-center">${badgeHtml}</div>
             </div>
-          `,
-            )
-            .join("");
-        }
-
-        function downloadAttendancePdf() {
-          const selectedCourseCode = courseSelect.value;
-          const course = records[selectedCourseCode];
-          if (!course) return;
-
-          const { jsPDF } = window.jspdf;
-          const doc = new jsPDF();
-
-          const pageWidth = doc.internal.pageSize.getWidth();
-          const generatedDate = new Date().toLocaleString();
-
-          const totalStudents = course.students.length;
-          const presentCount = course.students.filter(
-            (student) => student.status === "Present",
-          ).length;
-          const absentCount = totalStudents - presentCount;
-
-          doc.setFont("helvetica", "bold");
-          doc.setFontSize(18);
-          doc.text("Attendance Report", 14, 18);
-
-          doc.setFont("helvetica", "normal");
-          doc.setFontSize(11);
-          doc.text(`Course: ${course.courseName}`, 14, 28);
-          doc.text(`Course Code: ${selectedCourseCode}`, 14, 35);
-          doc.text(`Generated: ${generatedDate}`, 14, 42);
-
-          doc.text(`Total Students: ${totalStudents}`, 140, 28);
-          doc.text(`Present: ${presentCount}`, 140, 35);
-          doc.text(`Absent: ${absentCount}`, 140, 42);
-
-          const tableRows = course.students.map((student, index) => [
-            index + 1,
-            student.name,
-            student.id,
-            student.programme,
-            student.status,
-          ]);
-
-          doc.autoTable({
-            startY: 52,
-            head: [
-              ["S/N", "Student Name", "Student ID", "Programme", "Status"],
-            ],
-            body: tableRows,
-            theme: "grid",
-            styles: {
-              fontSize: 10,
-              cellPadding: 4,
-              valign: "middle",
-            },
-            headStyles: {
-              fillColor: [1, 107, 85],
-              textColor: [255, 255, 255],
-              fontStyle: "bold",
-            },
-            bodyStyles: {
-              textColor: [27, 27, 28],
-            },
-            alternateRowStyles: {
-              fillColor: [245, 245, 245],
-            },
-            columnStyles: {
-              0: { halign: "center", cellWidth: 14 },
-              1: { cellWidth: 48 },
-              2: { halign: "center", cellWidth: 30 },
-              3: { cellWidth: 55 },
-              4: { halign: "center", cellWidth: 28 },
-            },
-            didParseCell: function (data) {
-              if (data.section === "body" && data.column.index === 4) {
-                const status = data.cell.raw;
-                if (status === "Present") {
-                  data.cell.styles.textColor = [0, 97, 76];
-                  data.cell.styles.fontStyle = "bold";
-                } else if (status === "Absent") {
-                  data.cell.styles.textColor = [186, 26, 26];
-                  data.cell.styles.fontStyle = "bold";
-                }
-              }
-            },
-          });
-
-          const finalY = doc.lastAutoTable.finalY || 60;
-          doc.setFontSize(10);
-          doc.setTextColor(110, 122, 116);
-          doc.text(
-            "Generated from University Portal Attendance Records",
-            14,
-            finalY + 12,
-          );
-
-          const fileName = `${selectedCourseCode}-attendance-report.pdf`;
-          doc.save(fileName);
-        }
-
-        courseSelect.addEventListener("change", function () {
-          renderCourse(this.value);
+          `;
         });
 
-        if (downloadPdfBtn) {
-          downloadPdfBtn.addEventListener("click", downloadAttendancePdf);
+        recordsTableBody.innerHTML = html;
+      }
+
+      // ─── PDF Download ────────────────────────────────────────
+      function downloadPdf() {
+        if (!currentRecords || currentRecords.length === 0) {
+          showMessage('No records to export.', true);
+          return;
         }
 
-        renderCourse(courseSelect.value);
-      })();
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        const courseCode = currentCourse || 'Course';
+        const dateStr = currentDate ? formatDateDisplay(currentDate) : 'N/A';
+        const generatedDate = new Date().toLocaleString();
+
+        const total = currentRecords.length;
+        const presentCount = currentRecords.filter(r => r.status === 'present').length;
+        const absentCount = currentRecords.filter(r => r.status === 'absent').length;
+        const excusedCount = currentRecords.filter(r => r.status === 'excused').length;
+
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(18);
+        doc.text('Attendance Report', 14, 18);
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(11);
+        doc.text(`Course: ${courseCode}`, 14, 28);
+        doc.text(`Date: ${dateStr}`, 14, 35);
+        doc.text(`Generated: ${generatedDate}`, 14, 42);
+
+        doc.text(`Total Students: ${total}`, 140, 28);
+        doc.text(`Present: ${presentCount}`, 140, 35);
+        doc.text(`Absent: ${absentCount}`, 140, 42);
+        doc.text(`Excused: ${excusedCount}`, 140, 49);
+
+        const tableRows = currentRecords.map((r, idx) => {
+          const student = r.student || {};
+          return [
+            idx + 1,
+            student.fullName || 'Unknown',
+            student.matricNumber || '—',
+            student.department || '—',
+            (r.status || 'absent').toUpperCase(),
+          ];
+        });
+
+        doc.autoTable({
+          startY: 56,
+          head: [['S/N', 'Student Name', 'Student ID', 'Programme', 'Status']],
+          body: tableRows,
+          theme: 'grid',
+          styles: { fontSize: 10, cellPadding: 4, valign: 'middle' },
+          headStyles: { fillColor: [1, 107, 85], textColor: [255,255,255], fontStyle: 'bold' },
+          bodyStyles: { textColor: [27,27,28] },
+          alternateRowStyles: { fillColor: [245,245,245] },
+          columnStyles: {
+            0: { halign: 'center', cellWidth: 14 },
+            1: { cellWidth: 48 },
+            2: { halign: 'center', cellWidth: 30 },
+            3: { cellWidth: 55 },
+            4: { halign: 'center', cellWidth: 28 },
+          },
+          didParseCell: function (data) {
+            if (data.section === 'body' && data.column.index === 4) {
+              const status = (data.cell.raw || '').toLowerCase();
+              if (status === 'present') {
+                data.cell.styles.textColor = [0, 97, 76];
+                data.cell.styles.fontStyle = 'bold';
+              } else if (status === 'excused') {
+                data.cell.styles.textColor = [133, 64, 54];
+                data.cell.styles.fontStyle = 'bold';
+              } else if (status === 'absent') {
+                data.cell.styles.textColor = [186, 26, 26];
+                data.cell.styles.fontStyle = 'bold';
+              }
+            }
+          },
+        });
+
+        const finalY = doc.lastAutoTable.finalY || 70;
+        doc.setFontSize(10);
+        doc.setTextColor(110, 122, 116);
+        doc.text('Generated from University Portal Attendance Records', 14, finalY + 12);
+
+        const fileName = `${courseCode}-attendance-${currentDate || 'today'}.pdf`;
+        doc.save(fileName);
+      }
+
+      // ─── Event listeners ──────────────────────────────────────
+      refreshBtn.addEventListener('click', function() {
+        if (currentCourse && currentDate) {
+          loadAttendance(currentCourse, currentDate);
+        } else {
+          showMessage('Please select a course and date.', true);
+        }
+      });
+
+      downloadPdfBtn.addEventListener('click', downloadPdf);
+
+      document.getElementById('logoutBtn').addEventListener('click', async () => {
+        try { await userService.logout(); } catch (e) {}
+        apiService.setToken(null);
+        window.location.href = 'index.html';
+      });
+
+      // ─── Init ──────────────────────────────────────────────────
+      if (token) {
+        loadLecturer();
+      }
     </script>
   </body>
 </html>

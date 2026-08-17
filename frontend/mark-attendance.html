@@ -83,656 +83,832 @@
       };
     </script>
     <style>
-      body {
-        font-family: "Inter", sans-serif;
-      }
-      h1,
-      h2,
-      h3,
-      .display-font {
-        font-family: "Manrope", sans-serif;
-      }
+      body { font-family: "Inter", sans-serif; }
+      h1, h2, h3, .display-font { font-family: "Manrope", sans-serif; }
       .material-symbols-outlined {
-        font-variation-settings:
-          "FILL" 0,
-          "wght" 400,
-          "GRAD" 0,
-          "opsz" 24;
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
         vertical-align: middle;
       }
-      .soft-shadow {
-        box-shadow: 0 12px 32px -4px rgba(27, 27, 28, 0.06);
-      }
+      .soft-shadow { box-shadow: 0 12px 32px -4px rgba(27, 27, 28, 0.06); }
       .glass-nav {
         background: rgba(255, 255, 255, 0.8);
         backdrop-filter: blur(12px);
       }
-      .no-scrollbar::-webkit-scrollbar {
-        display: none;
-      }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
       .sidebar-transition {
-        transition:
-          transform 0.3s ease,
-          opacity 0.3s ease;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+      }
+      .status-btn {
+        transition: all 0.2s ease;
+        cursor: pointer;
+      }
+      .status-btn.active-present {
+        background: #9ef3d7;
+        color: #005140;
+        box-shadow: 0 0 0 2px #00604c, 0 0 0 4px rgba(0,96,76,0.2);
+      }
+      .status-btn.active-absent {
+        background: #ffdad6;
+        color: #93000a;
+        box-shadow: 0 0 0 2px #ba1a1a, 0 0 0 4px rgba(186,26,26,0.2);
+      }
+      .status-btn.active-excused {
+        background: #ffb4a8;
+        color: #74332a;
+        box-shadow: 0 0 0 2px #854036, 0 0 0 4px rgba(133,64,54,0.2);
+      }
+      .status-btn.inactive {
+        background: #eae7e7;
+        color: #3e4945;
+      }
+      .status-btn.inactive:hover {
+        background: #dcd9d9;
+      }
+
+      /* Custom dropdown */
+      .custom-dropdown {
+        position: relative;
+        width: 100%;
+        max-width: 260px;
+      }
+      .custom-dropdown-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        background: #eae7e7;
+        border: none;
+        border-radius: 0.75rem;
+        padding: 0.75rem 1rem;
+        font-weight: 500;
+        color: #1b1b1c;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+      .custom-dropdown-toggle:hover { background: #dcd9d9; }
+      .custom-dropdown-toggle .arrow { transition: transform 0.25s ease; }
+      .custom-dropdown-toggle.open .arrow { transform: rotate(180deg); }
+      .custom-dropdown-menu {
+        position: absolute;
+        top: calc(100% + 6px);
+        left: 0;
+        width: 100%;
+        background: #ffffff;
+        border-radius: 0.75rem;
+        box-shadow: 0 12px 32px -4px rgba(27,27,28,0.15);
+        max-height: 220px;
+        overflow-y: auto;
+        z-index: 50;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-6px);
+        transition: all 0.2s ease;
+        padding: 0.25rem;
+      }
+      .custom-dropdown-menu.open {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+      .custom-dropdown-item {
+        display: block;
+        width: 100%;
+        padding: 0.6rem 1rem;
+        border-radius: 0.5rem;
+        text-align: left;
+        font-weight: 500;
+        color: #1b1b1c;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .custom-dropdown-item:hover { background: #eae7e7; }
+      .custom-dropdown-item.active { background: #9ef3d7; color: #005140; }
+
+      /* Date chips */
+      .date-chip {
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        background: #eae7e7;
+        color: #3e4945;
+      }
+      .date-chip:hover { background: #dcd9d9; }
+      .date-chip.active {
+        background: #00604c;
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(0,96,76,0.25);
+      }
+      .date-chip.warning {
+        background: #ffdad6;
+        color: #93000a;
+      }
+      .date-chip.warning:hover { background: #ffcbc6; }
+
+      /* Custom date picker */
+      .date-picker {
+        background: #eae7e7;
+        border: none;
+        border-radius: 0.75rem;
+        padding: 0.7rem 1rem;
+        font-weight: 500;
+        color: #1b1b1c;
+        cursor: pointer;
+        transition: background 0.2s;
+        min-width: 150px;
+      }
+      .date-picker:hover { background: #dcd9d9; }
+      .date-picker:focus { outline: 2px solid #00604c; }
+      .date-picker::-webkit-calendar-picker-indicator {
+        filter: invert(0.3);
+        cursor: pointer;
+      }
+
+      /* Modal */
+      .modal-overlay {
+        background: rgba(0,0,0,0.45);
+        backdrop-filter: blur(4px);
+        animation: fadeIn 0.2s ease;
+      }
+      .modal-card { animation: slideUp 0.25s ease; }
+      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes slideUp { from { opacity: 0; transform: translateY(20px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+      .warning-bar {
+        background: #ffdad6;
+        color: #93000a;
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
       }
     </style>
   </head>
   <body class="bg-background text-on-surface overflow-x-hidden">
     <div class="flex min-h-screen">
       <!-- Mobile Overlay -->
-      <div
-        id="sidebarOverlay"
-        class="fixed inset-0 bg-black/40 z-40 hidden lg:hidden"
-      ></div>
+      <div id="sidebarOverlay" class="fixed inset-0 bg-black/40 z-40 hidden lg:hidden"></div>
 
       <!-- Sidebar -->
-      <aside
-        id="sidebar"
-        class="sidebar-transition fixed top-0 left-0 z-50 h-screen w-72 max-w-[85vw] bg-surface border-r border-outline-variant/20 flex flex-col -translate-x-full lg:translate-x-0 lg:sticky lg:top-0 lg:z-auto"
-      >
-        <div
-          class="p-6 sm:p-8 flex items-center justify-between gap-4 border-b border-outline-variant/10 lg:border-b-0"
-        >
+      <aside id="sidebar" class="sidebar-transition fixed top-0 left-0 z-50 h-screen w-72 max-w-[85vw] bg-surface border-r border-outline-variant/20 flex flex-col -translate-x-full lg:translate-x-0 lg:sticky lg:top-0 lg:z-auto">
+        <div class="p-6 sm:p-8 flex items-center justify-between gap-4 border-b border-outline-variant/10 lg:border-b-0">
           <div class="flex items-center gap-4">
-            <div
-              class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-on-primary"
-            >
+            <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-on-primary">
               <span class="material-symbols-outlined">school</span>
             </div>
             <div>
-              <h2 class="text-on-surface font-headline font-bold leading-tight">
-                University Portal
-              </h2>
-              <p class="text-on-surface-variant text-xs font-body">
-                Lecturer Access
-              </p>
+              <h2 class="text-on-surface font-headline font-bold leading-tight">University Portal</h2>
+              <p class="text-on-surface-variant text-xs font-body">Lecturer Access</p>
             </div>
           </div>
-
-          <button
-            id="closeSidebar"
-            type="button"
-            class="lg:hidden w-10 h-10 rounded-full hover:bg-surface-container flex items-center justify-center"
-            aria-label="Close menu"
-          >
+          <button id="closeSidebar" type="button" class="lg:hidden w-10 h-10 rounded-full hover:bg-surface-container flex items-center justify-center" aria-label="Close menu">
             <span class="material-symbols-outlined">close</span>
           </button>
         </div>
 
-        <nav
-          class="flex-1 px-4 py-4 space-y-2 mt-2 lg:mt-4 overflow-y-auto no-scrollbar"
-        >
-          <a
-            class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all"
-            href="dashboard.html"
-          >
+        <nav class="flex-1 px-4 py-4 space-y-2 mt-2 lg:mt-4 overflow-y-auto no-scrollbar">
+          <a class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all" href="dashboard.html">
             <span class="material-symbols-outlined">dashboard</span>
             <span class="font-body">Dashboard</span>
           </a>
-
-          <a
-            class="flex items-center gap-4 px-4 py-3 rounded-xl bg-secondary-container text-primary font-medium transition-all"
-            href="mark-attendance.html"
-          >
+          <a class="flex items-center gap-4 px-4 py-3 rounded-xl bg-secondary-container text-primary font-medium transition-all" href="mark-attendance.html">
             <span class="material-symbols-outlined">fact_check</span>
             <span class="font-body">Mark Attendance</span>
             <div class="ml-auto w-1 h-6 bg-primary rounded-full"></div>
           </a>
-
-          <a
-            class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all"
-            href="attendance-records.html"
-          >
+          <a class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all" href="attendance-records.html">
             <span class="material-symbols-outlined">analytics</span>
             <span class="font-body">Attendance Records</span>
           </a>
-
-          <a
-            class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all"
-            href="attendance-eligibility.html"
-          >
+          <a class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all" href="attendance-eligibility.html">
             <span class="material-symbols-outlined">rule</span>
             <span class="font-body">Attendance Eligibility</span>
           </a>
-
-          <a
-            class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all mt-8"
-            href="settings.html"
-          >
+          <a class="flex items-center gap-4 px-4 py-3 rounded-xl text-on-surface-variant hover:bg-surface-container-low transition-all mt-8" href="settings.html">
             <span class="material-symbols-outlined">settings</span>
             <span class="font-body">Settings</span>
           </a>
-
-          <a
-            class="flex items-center gap-4 px-4 py-3 rounded-xl text-error hover:bg-error-container/10 transition-all"
-            href="#"
-          >
+          <button id="logoutBtn" class="flex items-center gap-4 w-full px-4 py-3 rounded-xl text-error hover:bg-error-container/10 transition-all">
             <span class="material-symbols-outlined">logout</span>
             <span class="font-body">Logout</span>
-          </a>
+          </button>
         </nav>
       </aside>
 
       <!-- Main Content -->
       <main class="flex-1 flex flex-col min-w-0 w-full">
         <!-- TopNavBar -->
-        <header
-          class="h-auto min-h-20 glass-nav border-b border-outline-variant/10 px-4 sm:px-6 lg:px-10 py-4 lg:py-0 flex items-center sticky top-0 z-30"
-        >
+        <header class="h-auto min-h-20 glass-nav border-b border-outline-variant/10 px-4 sm:px-6 lg:px-10 py-4 lg:py-0 flex items-center sticky top-0 z-30">
           <div class="flex items-center gap-3 sm:gap-4 flex-1">
-            <button
-              id="openSidebar"
-              type="button"
-              class="lg:hidden w-11 h-11 rounded-full bg-surface-container-low hover:bg-surface-container flex items-center justify-center shrink-0"
-              aria-label="Open menu"
-            >
+            <button id="openSidebar" type="button" class="lg:hidden w-11 h-11 rounded-full bg-surface-container-low hover:bg-surface-container flex items-center justify-center shrink-0" aria-label="Open menu">
               <span class="material-symbols-outlined">menu</span>
             </button>
-
             <div class="relative w-full max-w-md">
-              <span
-                class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg"
-                >search</span
-              >
-              <input
-                class="w-full bg-surface-container-low border-none rounded-full py-2.5 pl-12 pr-4 sm:pr-6 text-sm focus:ring-2 focus:ring-primary/20 transition-all"
-                placeholder="Search for students, courses, or records..."
-                type="text"
-              />
+              <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg">search</span>
+              <input class="w-full bg-surface-container-low border-none rounded-full py-2.5 pl-12 pr-4 sm:pr-6 text-sm focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search for students, courses, or records..." type="text" />
+            </div>
+            <div class="flex items-center gap-2 ml-auto">
+              <span id="lecturerNameDisplay" class="text-sm font-semibold hidden sm:inline">Lecturer</span>
+              <div class="w-9 h-9 rounded-full bg-primary-container/20 flex items-center justify-center text-primary font-bold">
+                <span id="lecturerInitial">L</span>
+              </div>
             </div>
           </div>
         </header>
 
         <!-- MARK ATTENDANCE CONTENT -->
-        <div
-          class="p-4 sm:p-6 lg:p-10 space-y-6 sm:space-y-8 overflow-y-auto no-scrollbar pb-8 sm:pb-10"
-        >
+        <div id="markAttendanceContent" class="p-4 sm:p-6 lg:p-10 space-y-6 sm:space-y-8 overflow-y-auto no-scrollbar pb-8 sm:pb-10">
           <!-- Heading -->
-          <div
-            class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
-          >
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2
-                class="text-2xl sm:text-3xl font-headline font-bold text-on-surface tracking-tight"
-              >
-                Mark Attendance
-              </h2>
-              <p
-                class="text-on-surface-variant font-body mt-1 text-sm sm:text-base"
-              >
-                Follow the steps: select a course, mark present or absent, then
-                save.
+              <h2 class="text-2xl sm:text-3xl font-headline font-bold text-on-surface tracking-tight">Mark Attendance</h2>
+              <p class="text-on-surface-variant font-body mt-1 text-sm sm:text-base">
+                Select a course and date, then mark each student's status.
               </p>
             </div>
           </div>
 
-          <!-- Select course -->
-          <div
-            class="bg-surface-container-lowest p-5 sm:p-6 lg:p-8 rounded-xl soft-shadow space-y-4 sm:space-y-6"
-          >
-            <div class="flex flex-col gap-4 sm:flex-row sm:items-center">
-              <h3 class="text-base sm:text-lg font-headline font-semibold">
-                Select a course
-              </h3>
-              <div class="relative inline-block w-full sm:w-64">
-                <select
-                  class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 text-on-surface font-medium focus:ring-2 focus:ring-primary appearance-none"
-                  id="courseSelect"
-                >
-                  <option value="ECO101" selected>
-                    Intro to Macroeconomics
-                  </option>
-                  <option value="MKT101">Digital Marketing 101</option>
-                  <option value="STAT202">Advanced Statistics</option>
-                  <option value="CS210">Data Structures</option>
-                </select>
+          <!-- Selection controls -->
+          <div class="bg-surface-container-lowest p-5 sm:p-6 lg:p-8 rounded-xl soft-shadow space-y-5">
+            <!-- Row 1: Course + Date chips + Date picker -->
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:flex-wrap">
+              <!-- Custom Course Dropdown -->
+              <div class="custom-dropdown" id="courseDropdown">
+                <button type="button" class="custom-dropdown-toggle" id="courseToggle">
+                  <span id="courseSelectedLabel">Select course…</span>
+                  <span class="material-symbols-outlined arrow">expand_more</span>
+                </button>
+                <div class="custom-dropdown-menu" id="courseMenu"></div>
               </div>
+
+              <!-- Date chips -->
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="text-sm text-on-surface-variant font-medium mr-1">Date:</span>
+                <button type="button" class="date-chip active" data-offset="0">Today</button>
+                <button type="button" class="date-chip warning" data-offset="1">Yesterday</button>
+                <button type="button" class="date-chip warning" data-offset="7">Last Week</button>
+              </div>
+
+              <!-- Custom date picker -->
+              <input type="date" id="datePicker" class="date-picker" max="" />
+
+              <button id="refreshBtn" class="px-6 py-2.5 bg-primary/10 text-primary rounded-full font-semibold hover:bg-primary/20 transition-all flex items-center gap-2 ml-auto">
+                <span class="material-symbols-outlined">refresh</span> Load
+              </button>
+            </div>
+
+            <!-- Past date warning -->
+            <div id="pastDateWarning" class="hidden warning-bar">
+              <span class="material-symbols-outlined text-lg">warning</span>
+              <span>You are marking attendance for a past date – confirm when prompted.</span>
+            </div>
+
+            <!-- Course info line -->
+            <div id="courseInfo" class="text-sm text-on-surface-variant hidden">
+              Loading students…
             </div>
           </div>
 
           <!-- Student list -->
-          <div
-            class="bg-surface-container-lowest rounded-xl soft-shadow p-4 sm:p-6 lg:p-8"
-          >
-            <div class="flex items-center gap-4 mb-5 sm:mb-6">
-              <h3
-                id="studentListHeading"
-                class="text-base sm:text-lg font-headline font-semibold"
-              >
-                Student list · ECO101 (Intro to Macroeconomics)
-              </h3>
-            </div>
-
-            <!-- Desktop header -->
-            <div
-              class="hidden md:grid grid-cols-12 gap-4 px-4 py-3 bg-surface-container-low rounded-lg mb-2 text-xs font-label uppercase tracking-wider text-on-surface-variant font-bold"
-            >
-              <div class="col-span-5">Student Name & ID</div>
-              <div class="col-span-3">Programme</div>
-              <div class="col-span-4 text-center">Attendance status</div>
-            </div>
-
-            <div class="space-y-3 md:space-y-1">
-              <!-- Student 1 -->
-              <div
-                class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start md:items-center px-4 py-4 rounded-xl hover:bg-surface-container-high transition-all"
-              >
-                <div class="md:col-span-5 flex items-center gap-3 min-w-0">
-                  <div
-                    class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center font-bold shrink-0"
-                  >
-                    MK
-                  </div>
-                  <div class="min-w-0">
-                    <span class="font-semibold text-on-surface block truncate"
-                      >Maya Kaur</span
-                    >
-                    <span class="text-xs text-on-surface-variant"
-                      >ID: 20240087</span
-                    >
-                  </div>
-                </div>
-
-                <div class="md:col-span-3 text-sm text-on-surface-variant">
-                  <span class="md:hidden font-semibold text-on-surface"
-                    >Programme:
-                  </span>
-                  Economics
-                </div>
-
-                <div
-                  class="md:col-span-4 flex flex-col sm:flex-row md:justify-center gap-2"
-                >
-                  <button
-                    class="status-present px-4 sm:px-5 py-2 rounded-full text-sm font-bold transition-all flex items-center justify-center gap-1 bg-primary-fixed text-on-primary-fixed-variant ring-2 ring-primary ring-offset-2"
-                    data-student="maya"
-                    data-status="present"
-                  >
-                    <span class="material-symbols-outlined text-lg"
-                      >check_circle</span
-                    >
-                    Present
-                  </button>
-                  <button
-                    class="status-absent px-4 sm:px-5 py-2 rounded-full text-sm font-bold transition-all flex items-center justify-center gap-1 bg-surface-container-high text-on-surface-variant hover:bg-error-container/20"
-                    data-student="maya"
-                    data-status="absent"
-                  >
-                    <span class="material-symbols-outlined text-lg"
-                      >cancel</span
-                    >
-                    Absent
-                  </button>
-                </div>
-              </div>
-
-              <!-- Student 2 -->
-              <div
-                class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start md:items-center px-4 py-4 rounded-xl hover:bg-surface-container-high transition-all"
-              >
-                <div class="md:col-span-5 flex items-center gap-3 min-w-0">
-                  <div
-                    class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed-variant font-bold shrink-0"
-                  >
-                    LS
-                  </div>
-                  <div class="min-w-0">
-                    <span class="font-semibold text-on-surface block truncate"
-                      >Liam Sterling</span
-                    >
-                    <span class="text-xs text-on-surface-variant"
-                      >ID: 20240112</span
-                    >
-                  </div>
-                </div>
-
-                <div class="md:col-span-3 text-sm text-on-surface-variant">
-                  <span class="md:hidden font-semibold text-on-surface"
-                    >Programme:
-                  </span>
-                  Marketing
-                </div>
-
-                <div
-                  class="md:col-span-4 flex flex-col sm:flex-row md:justify-center gap-2"
-                >
-                  <button
-                    class="status-present px-4 sm:px-5 py-2 rounded-full text-sm font-bold transition-all flex items-center justify-center gap-1 bg-surface-container-high text-on-surface-variant hover:bg-primary-fixed"
-                    data-student="liam"
-                    data-status="present"
-                  >
-                    <span class="material-symbols-outlined text-lg"
-                      >check_circle</span
-                    >
-                    Present
-                  </button>
-                  <button
-                    class="status-absent px-4 sm:px-5 py-2 rounded-full text-sm font-bold transition-all flex items-center justify-center gap-1 bg-surface-container-high text-on-surface-variant hover:bg-error-container/20"
-                    data-student="liam"
-                    data-status="absent"
-                  >
-                    <span class="material-symbols-outlined text-lg"
-                      >cancel</span
-                    >
-                    Absent
-                  </button>
-                </div>
-              </div>
-
-              <!-- Student 3 -->
-              <div
-                class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start md:items-center px-4 py-4 rounded-xl hover:bg-surface-container-high transition-all"
-              >
-                <div class="md:col-span-5 flex items-center gap-3 min-w-0">
-                  <div
-                    class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant font-bold shrink-0"
-                  >
-                    JA
-                  </div>
-                  <div class="min-w-0">
-                    <span class="font-semibold text-on-surface block truncate"
-                      >Jared Ames</span
-                    >
-                    <span class="text-xs text-on-surface-variant"
-                      >ID: 20239874</span
-                    >
-                  </div>
-                </div>
-
-                <div class="md:col-span-3 text-sm text-on-surface-variant">
-                  <span class="md:hidden font-semibold text-on-surface"
-                    >Programme:
-                  </span>
-                  Statistics
-                </div>
-
-                <div
-                  class="md:col-span-4 flex flex-col sm:flex-row md:justify-center gap-2"
-                >
-                  <button
-                    class="status-present px-4 sm:px-5 py-2 rounded-full text-sm font-bold transition-all flex items-center justify-center gap-1 bg-surface-container-high text-on-surface-variant hover:bg-primary-fixed"
-                    data-student="jared"
-                    data-status="present"
-                  >
-                    <span class="material-symbols-outlined text-lg"
-                      >check_circle</span
-                    >
-                    Present
-                  </button>
-                  <button
-                    class="status-absent px-4 sm:px-5 py-2 rounded-full text-sm font-bold transition-all flex items-center justify-center gap-1 bg-surface-container-high text-on-surface-variant hover:bg-error-container/20"
-                    data-student="jared"
-                    data-status="absent"
-                  >
-                    <span class="material-symbols-outlined text-lg"
-                      >cancel</span
-                    >
-                    Absent
-                  </button>
-                </div>
-              </div>
-
-              <!-- Student 4 -->
-              <div
-                class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start md:items-center px-4 py-4 rounded-xl hover:bg-surface-container-high transition-all"
-              >
-                <div class="md:col-span-5 flex items-center gap-3 min-w-0">
-                  <div
-                    class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold shrink-0"
-                  >
-                    EM
-                  </div>
-                  <div class="min-w-0">
-                    <span class="font-semibold text-on-surface block truncate"
-                      >Elena Moretti</span
-                    >
-                    <span class="text-xs text-on-surface-variant"
-                      >ID: 20241103</span
-                    >
-                  </div>
-                </div>
-
-                <div class="md:col-span-3 text-sm text-on-surface-variant">
-                  <span class="md:hidden font-semibold text-on-surface"
-                    >Programme:
-                  </span>
-                  Economics
-                </div>
-
-                <div
-                  class="md:col-span-4 flex flex-col sm:flex-row md:justify-center gap-2"
-                >
-                  <button
-                    class="status-present px-4 sm:px-5 py-2 rounded-full text-sm font-bold transition-all flex items-center justify-center gap-1 bg-primary-fixed text-on-primary-fixed-variant ring-2 ring-primary ring-offset-2"
-                    data-student="elena"
-                    data-status="present"
-                  >
-                    <span class="material-symbols-outlined text-lg"
-                      >check_circle</span
-                    >
-                    Present
-                  </button>
-                  <button
-                    class="status-absent px-4 sm:px-5 py-2 rounded-full text-sm font-bold transition-all flex items-center justify-center gap-1 bg-surface-container-high text-on-surface-variant hover:bg-error-container/20"
-                    data-student="elena"
-                    data-status="absent"
-                  >
-                    <span class="material-symbols-outlined text-lg"
-                      >cancel</span
-                    >
-                    Absent
-                  </button>
-                </div>
-              </div>
-
-              <!-- Student 5 -->
-              <div
-                class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start md:items-center px-4 py-4 rounded-xl hover:bg-surface-container-high transition-all"
-              >
-                <div class="md:col-span-5 flex items-center gap-3 min-w-0">
-                  <div
-                    class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center font-bold shrink-0"
-                  >
-                    RT
-                  </div>
-                  <div class="min-w-0">
-                    <span class="font-semibold text-on-surface block truncate"
-                      >Rosa Tran</span
-                    >
-                    <span class="text-xs text-on-surface-variant"
-                      >ID: 20237821</span
-                    >
-                  </div>
-                </div>
-
-                <div class="md:col-span-3 text-sm text-on-surface-variant">
-                  <span class="md:hidden font-semibold text-on-surface"
-                    >Programme:
-                  </span>
-                  Finance
-                </div>
-
-                <div
-                  class="md:col-span-4 flex flex-col sm:flex-row md:justify-center gap-2"
-                >
-                  <button
-                    class="status-present px-4 sm:px-5 py-2 rounded-full text-sm font-bold transition-all flex items-center justify-center gap-1 bg-surface-container-high text-on-surface-variant hover:bg-primary-fixed"
-                    data-student="rosa"
-                    data-status="present"
-                  >
-                    <span class="material-symbols-outlined text-lg"
-                      >check_circle</span
-                    >
-                    Present
-                  </button>
-                  <button
-                    class="status-absent px-4 sm:px-5 py-2 rounded-full text-sm font-bold transition-all flex items-center justify-center gap-1 bg-error-container text-on-error-container ring-2 ring-error ring-offset-2"
-                    data-student="rosa"
-                    data-status="absent"
-                  >
-                    <span class="material-symbols-outlined text-lg"
-                      >cancel</span
-                    >
-                    Absent
-                  </button>
-                </div>
-              </div>
+          <div id="studentListContainer" class="bg-surface-container-lowest rounded-xl soft-shadow p-4 sm:p-6 lg:p-8">
+            <div id="studentListInner">
+              <div class="text-center py-10 text-on-surface-variant">Select a course and click Load.</div>
             </div>
           </div>
 
           <!-- Save section -->
           <div class="flex items-start gap-8">
-            <div
-              class="w-full bg-surface-container-lowest p-5 sm:p-6 lg:p-8 rounded-xl soft-shadow flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between"
-            >
+            <div class="w-full bg-surface-container-lowest p-5 sm:p-6 lg:p-8 rounded-xl soft-shadow flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
               <div>
-                <h3 class="text-base sm:text-lg font-headline font-semibold">
-                  Save & store record
-                </h3>
-                <p class="text-sm text-on-surface-variant">
-                  After marking all students, click to persist attendance.
-                </p>
+                <h3 class="text-base sm:text-lg font-headline font-semibold">Save &amp; store record</h3>
+                <p class="text-sm text-on-surface-variant">After marking all students, click to persist attendance.</p>
               </div>
-
-              <button
-                id="saveAttendanceBtn"
-                class="w-full sm:w-auto bg-primary text-on-primary px-6 sm:px-10 py-3.5 sm:py-4 rounded-xl font-bold flex items-center justify-center gap-3 text-base sm:text-lg shadow-lg hover:bg-primary-container transition-all soft-shadow"
-              >
+              <button id="saveAttendanceBtn" class="w-full sm:w-auto bg-primary text-on-primary px-6 sm:px-10 py-3.5 sm:py-4 rounded-xl font-bold flex items-center justify-center gap-3 text-base sm:text-lg shadow-lg hover:bg-primary-container transition-all soft-shadow disabled:opacity-50 disabled:cursor-not-allowed">
                 <span class="material-symbols-outlined">save</span>
                 Save Attendance
               </button>
             </div>
           </div>
+
+          <!-- Message area -->
+          <div id="messageArea" class="hidden text-sm font-medium rounded-lg px-4 py-3"></div>
         </div>
       </main>
     </div>
 
-    <script src="js/sidebar-menu.js"></script>
+    <!-- ─── CONFIRMATION MODAL ─── -->
+    <div id="confirmModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden">
+      <div class="modal-card bg-surface-container-lowest rounded-2xl p-6 max-w-md w-full soft-shadow">
+        <div class="flex items-start gap-4 mb-4">
+          <div class="w-12 h-12 rounded-full bg-error-container/30 flex items-center justify-center text-error shrink-0">
+            <span class="material-symbols-outlined text-2xl">warning</span>
+          </div>
+          <div>
+            <h3 class="text-xl font-headline font-bold text-on-surface" id="modalTitle">Mark attendance for a past date?</h3>
+            <p class="text-sm text-on-surface-variant mt-1" id="modalMessage">
+              You are about to mark attendance for <strong id="modalDateDisplay">Yesterday</strong>.
+              This action records attendance for a past session. Please confirm this is intentional.
+            </p>
+          </div>
+        </div>
+        <div class="flex gap-3 mt-2">
+          <button id="modalCancelBtn" class="flex-1 bg-surface-container-high text-on-surface py-2.5 rounded-xl font-semibold hover:bg-surface-container transition-all">Cancel</button>
+          <button id="modalConfirmBtn" class="flex-1 bg-error text-on-error py-2.5 rounded-xl font-semibold hover:bg-error/80 transition-all">Yes, mark past date</button>
+        </div>
+      </div>
+    </div>
 
+    <!-- ─── SCRIPTS ─── -->
     <script>
-      (function () {
-        const studentRows = document.querySelectorAll("[data-student]");
-        const grouped = {};
-
-        studentRows.forEach((btn) => {
-          const student = btn.dataset.student;
-          if (!grouped[student]) grouped[student] = [];
-          grouped[student].push(btn);
-        });
-
-        Object.values(grouped).forEach((buttons) => {
-          const presentBtn = buttons.find(
-            (b) => b.dataset.status === "present",
-          );
-          const absentBtn = buttons.find((b) => b.dataset.status === "absent");
-
-          if (!presentBtn || !absentBtn) return;
-
-          const setActive = (activeBtn, inactiveBtn) => {
-            if (activeBtn.classList.contains("status-present")) {
-              activeBtn.classList.remove(
-                "bg-surface-container-high",
-                "text-on-surface-variant",
-                "hover:bg-primary-fixed",
-              );
-              activeBtn.classList.add(
-                "bg-primary-fixed",
-                "text-on-primary-fixed-variant",
-                "ring-2",
-                "ring-primary",
-                "ring-offset-2",
-              );
-            } else {
-              activeBtn.classList.remove(
-                "bg-surface-container-high",
-                "text-on-surface-variant",
-                "hover:bg-error-container/20",
-              );
-              activeBtn.classList.add(
-                "bg-error-container",
-                "text-on-error-container",
-                "ring-2",
-                "ring-error",
-                "ring-offset-2",
-              );
-            }
-
-            if (inactiveBtn.classList.contains("status-present")) {
-              inactiveBtn.classList.remove(
-                "bg-primary-fixed",
-                "text-on-primary-fixed-variant",
-                "ring-2",
-                "ring-primary",
-                "ring-offset-2",
-              );
-              inactiveBtn.classList.add(
-                "bg-surface-container-high",
-                "text-on-surface-variant",
-                "hover:bg-primary-fixed",
-              );
-            } else {
-              inactiveBtn.classList.remove(
-                "bg-error-container",
-                "text-on-error-container",
-                "ring-2",
-                "ring-error",
-                "ring-offset-2",
-              );
-              inactiveBtn.classList.add(
-                "bg-surface-container-high",
-                "text-on-surface-variant",
-                "hover:bg-error-container/20",
-              );
-            }
-          };
-
-          presentBtn.addEventListener("click", function (e) {
-            e.preventDefault();
-            setActive(presentBtn, absentBtn);
-          });
-
-          absentBtn.addEventListener("click", function (e) {
-            e.preventDefault();
-            setActive(absentBtn, presentBtn);
-          });
-        });
-
-        const saveBtn = document.getElementById("saveAttendanceBtn");
-        if (saveBtn) {
-          saveBtn.addEventListener("click", function (e) {
-            e.preventDefault();
-
-            const presentCount = Array.from(
-              document.querySelectorAll(".status-present"),
-            ).filter((btn) =>
-              btn.classList.contains("bg-primary-fixed"),
-            ).length;
-
-            const absentCount = Array.from(
-              document.querySelectorAll(".status-absent"),
-            ).filter((btn) =>
-              btn.classList.contains("bg-error-container"),
-            ).length;
-
-            alert(
-              `✅ Attendance saved! (simulated)\nCourse: ${
-                document.getElementById("courseSelect").value
-              }\nPresent: ${presentCount}, Absent: ${absentCount}\nRecord stored in system.`,
-            );
-          });
-        }
-
-        const courseSelect = document.getElementById("courseSelect");
-        const heading = document.getElementById("studentListHeading");
-
-        if (courseSelect && heading) {
-          courseSelect.addEventListener("change", function () {
-            const courseCode = this.value;
-            const courseName = this.options[this.selectedIndex].text;
-            heading.textContent = `Student list · ${courseCode} (${courseName})`;
-          });
-        }
+      (function() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+        const openBtn = document.getElementById('openSidebar');
+        const closeBtn = document.getElementById('closeSidebar');
+        function openSidebar() { sidebar.classList.remove('-translate-x-full'); overlay.classList.remove('hidden'); }
+        function closeSidebar() { sidebar.classList.add('-translate-x-full'); overlay.classList.add('hidden'); }
+        if (openBtn) openBtn.addEventListener('click', openSidebar);
+        if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+        if (overlay) overlay.addEventListener('click', closeSidebar);
       })();
+    </script>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "./js/": "./js/"
+        }
+      }
+    </script>
+    <script type="module">
+      import userService from './js/userService.js';
+      import attendanceService from './js/attendanceService.js';
+      import apiService from './js/apiService.js';
+
+      // ─── DOM refs ─────────────────────────────────────────────
+      const courseToggle = document.getElementById('courseToggle');
+      const courseMenu = document.getElementById('courseMenu');
+      const courseSelectedLabel = document.getElementById('courseSelectedLabel');
+      const dateChips = document.querySelectorAll('.date-chip');
+      const datePicker = document.getElementById('datePicker');
+      const refreshBtn = document.getElementById('refreshBtn');
+      const studentListInner = document.getElementById('studentListInner');
+      const saveBtn = document.getElementById('saveAttendanceBtn');
+      const messageArea = document.getElementById('messageArea');
+      const courseInfo = document.getElementById('courseInfo');
+      const lecturerNameDisplay = document.getElementById('lecturerNameDisplay');
+      const lecturerInitial = document.getElementById('lecturerInitial');
+      const pastDateWarning = document.getElementById('pastDateWarning');
+
+      // Modal refs
+      const confirmModal = document.getElementById('confirmModal');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalMessage = document.getElementById('modalMessage');
+      const modalDateDisplay = document.getElementById('modalDateDisplay');
+      const modalCancelBtn = document.getElementById('modalCancelBtn');
+      const modalConfirmBtn = document.getElementById('modalConfirmBtn');
+
+      // ─── Helpers ──────────────────────────────────────────────
+      function showMessage(text, isError = true) {
+        messageArea.classList.remove('hidden', 'bg-primary-fixed', 'text-on-primary-fixed-variant', 'bg-error-container', 'text-on-error-container');
+        if (isError) {
+          messageArea.classList.add('bg-error-container', 'text-on-error-container');
+        } else {
+          messageArea.classList.add('bg-primary-fixed', 'text-on-primary-fixed-variant');
+        }
+        messageArea.textContent = text;
+      }
+      function hideMessage() {
+        messageArea.classList.add('hidden');
+        messageArea.textContent = '';
+      }
+      function getInitials(name) {
+        if (!name) return 'L';
+        return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+      }
+      function formatDateDisplay(dateStr) {
+        if (!dateStr) return 'N/A';
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+      }
+      function isPastDate(dateStr) {
+        if (!dateStr) return false;
+        const today = new Date().toISOString().slice(0,10);
+        return dateStr < today;
+      }
+      function setDatePickerMax() {
+        const today = new Date().toISOString().slice(0,10);
+        datePicker.setAttribute('max', today);
+      }
+      function syncDatePickerFromOffset(offset) {
+        const now = new Date();
+        const target = new Date(now);
+        target.setDate(target.getDate() - offset);
+        target.setHours(0,0,0,0);
+        const iso = target.toISOString().slice(0,10);
+        datePicker.value = iso;
+        return iso;
+      }
+
+      // ─── Auth check ──────────────────────────────────────────
+      const token = apiService.getToken();
+      if (!token) { window.location.href = 'index.html'; }
+
+      // ─── State ────────────────────────────────────────────────
+      let lecturerData = null;
+      let currentCourse = null;
+      let currentDate = null;
+      let students = [];
+      let statusMap = {};
+      let selectedOffset = 0; // 0 = today
+      let pendingDateChange = null; // used for modal flow
+
+      // ─── Custom dropdown ──────────────────────────────────────
+      function toggleDropdown(open) {
+        const isOpen = courseMenu.classList.contains('open');
+        if (open === undefined) {
+          courseMenu.classList.toggle('open');
+          courseToggle.classList.toggle('open');
+        } else if (open && !isOpen) {
+          courseMenu.classList.add('open');
+          courseToggle.classList.add('open');
+        } else if (!open && isOpen) {
+          courseMenu.classList.remove('open');
+          courseToggle.classList.remove('open');
+        }
+      }
+      courseToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleDropdown();
+      });
+      document.addEventListener('click', () => { toggleDropdown(false); });
+      courseMenu.addEventListener('click', (e) => { e.stopPropagation(); });
+
+      function renderCourseDropdown(courses, selected) {
+        if (!courses || courses.length === 0) {
+          courseMenu.innerHTML = `<button class="custom-dropdown-item" disabled>No courses assigned</button>`;
+          courseSelectedLabel.textContent = 'No courses';
+          return;
+        }
+        courseMenu.innerHTML = courses.map(c => `
+          <button class="custom-dropdown-item ${c === selected ? 'active' : ''}" data-course="${c}">${c}</button>
+        `).join('');
+        if (selected) {
+          courseSelectedLabel.textContent = selected;
+        } else {
+          courseSelectedLabel.textContent = courses[0] || 'Select course…';
+        }
+        courseMenu.querySelectorAll('.custom-dropdown-item').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const course = this.dataset.course;
+            if (course && course !== currentCourse) {
+              currentCourse = course;
+              courseSelectedLabel.textContent = course;
+              courseMenu.querySelectorAll('.custom-dropdown-item').forEach(b => b.classList.remove('active'));
+              this.classList.add('active');
+              toggleDropdown(false);
+              if (currentDate) {
+                loadAttendance(currentCourse, currentDate);
+              }
+            } else {
+              toggleDropdown(false);
+            }
+          });
+        });
+      }
+
+      // ─── Date chips and picker sync ──────────────────────────
+      function updateChipsFromPicker(dateStr) {
+        dateChips.forEach(chip => chip.classList.remove('active'));
+        // Find matching chip by comparing generated ISO
+        dateChips.forEach(chip => {
+          const offset = parseInt(chip.dataset.offset, 10);
+          const now = new Date();
+          const target = new Date(now);
+          target.setDate(target.getDate() - offset);
+          target.setHours(0,0,0,0);
+          const iso = target.toISOString().slice(0,10);
+          if (iso === dateStr) {
+            chip.classList.add('active');
+          }
+        });
+      }
+
+      // Click chip → set date picker and load (with modal if past)
+      dateChips.forEach(chip => {
+        chip.addEventListener('click', function() {
+          const offset = parseInt(this.dataset.offset, 10);
+          const dateStr = syncDatePickerFromOffset(offset);
+          // Deactivate all chips, then activate this one
+          dateChips.forEach(c => c.classList.remove('active'));
+          this.classList.add('active');
+
+          if (offset > 0) {
+            // Past date – show modal
+            const label = this.textContent.trim();
+            modalDateDisplay.textContent = label + ' (' + formatDateDisplay(dateStr) + ')';
+            modalTitle.textContent = 'Mark attendance for a past date?';
+            modalMessage.innerHTML = `
+              You are about to mark attendance for <strong>${label}</strong> (${formatDateDisplay(dateStr)}).
+              This action records attendance for a past session. Please confirm this is intentional.
+            `;
+            pendingDateChange = { dateStr, label };
+            confirmModal.classList.remove('hidden');
+            return;
+          }
+          // Today – load directly
+          currentDate = dateStr;
+          if (currentCourse) {
+            loadAttendance(currentCourse, dateStr);
+          }
+        });
+      });
+
+      // Date picker manual change
+      datePicker.addEventListener('change', function() {
+        const val = this.value;
+        if (!val) return;
+        // Update chips
+        updateChipsFromPicker(val);
+        const today = new Date().toISOString().slice(0,10);
+        if (val < today) {
+          // Past – show modal
+          pastDateWarning.classList.remove('hidden');
+          modalDateDisplay.textContent = formatDateDisplay(val);
+          modalTitle.textContent = 'Mark attendance for a past date?';
+          modalMessage.innerHTML = `
+            You are about to mark attendance for <strong>${formatDateDisplay(val)}</strong>.
+            This action records attendance for a past session. Please confirm this is intentional.
+          `;
+          pendingDateChange = { dateStr: val, label: formatDateDisplay(val) };
+          confirmModal.classList.remove('hidden');
+        } else {
+          pastDateWarning.classList.add('hidden');
+          currentDate = val;
+          if (currentCourse) {
+            loadAttendance(currentCourse, val);
+          }
+        }
+      });
+
+      // ─── Modal actions ────────────────────────────────────────
+      function closeModal() {
+        confirmModal.classList.add('hidden');
+        pendingDateChange = null;
+      }
+      modalCancelBtn.addEventListener('click', closeModal);
+      confirmModal.addEventListener('click', (e) => {
+        if (e.target === confirmModal) closeModal();
+      });
+
+      modalConfirmBtn.addEventListener('click', function() {
+        if (!pendingDateChange) return;
+        const { dateStr, label } = pendingDateChange;
+        // Ensure picker and chips are synced
+        datePicker.value = dateStr;
+        updateChipsFromPicker(dateStr);
+        currentDate = dateStr;
+        closeModal();
+        pastDateWarning.classList.add('hidden');
+        if (currentCourse) {
+          loadAttendance(currentCourse, dateStr);
+        }
+      });
+
+      // ─── Load lecturer ────────────────────────────────────────
+      async function loadLecturer() {
+        try {
+          const res = await userService.getMe();
+          if (!res.success || !res.lecturer) throw new Error('Failed to load lecturer data');
+          lecturerData = res.lecturer;
+          const name = lecturerData.fullName || 'Lecturer';
+          lecturerNameDisplay.textContent = name;
+          lecturerInitial.textContent = getInitials(name);
+
+          const courses = lecturerData.courses || [];
+          if (courses.length === 0) {
+            renderCourseDropdown([], null);
+            studentListInner.innerHTML = `<div class="text-center py-10 text-on-surface-variant">You are not assigned to any courses.</div>`;
+            return;
+          }
+          // Populate dropdown
+          currentCourse = courses[0];
+          renderCourseDropdown(courses, currentCourse);
+
+          // Set default date: Today
+          const today = new Date().toISOString().slice(0,10);
+          datePicker.value = today;
+          setDatePickerMax();
+          currentDate = today;
+          // Highlight Today chip
+          dateChips.forEach(chip => {
+            chip.classList.remove('active');
+            if (parseInt(chip.dataset.offset, 10) === 0) chip.classList.add('active');
+          });
+          pastDateWarning.classList.add('hidden');
+
+          await loadAttendance(currentCourse, today);
+
+        } catch (error) {
+          console.error('Load lecturer error:', error);
+          showMessage('Failed to load your data. Please refresh.', true);
+        }
+      }
+
+      // ─── Load attendance ──────────────────────────────────────
+      async function loadAttendance(courseCode, dateStr) {
+        if (!courseCode || !dateStr) return;
+        hideMessage();
+        studentListInner.innerHTML = `<div class="text-center py-10 text-on-surface-variant">Loading students…</div>`;
+        saveBtn.disabled = true;
+
+        try {
+          const res = await attendanceService.getAttendance(courseCode, dateStr);
+          let studentRecords = res.records || [];
+          if (!studentRecords || studentRecords.length === 0) {
+            studentListInner.innerHTML = `<div class="text-center py-10 text-on-surface-variant">No students enrolled in this course.</div>`;
+            saveBtn.disabled = true;
+            return;
+          }
+
+          students = studentRecords.map(r => ({
+            _id: r.student._id,
+            fullName: r.student.fullName,
+            matricNumber: r.student.matricNumber,
+            level: r.student.level,
+            department: r.student.department,
+            status: r.status || 'absent',
+          }));
+          statusMap = {};
+          students.forEach(s => { statusMap[s._id] = s.status; });
+
+          renderStudentList(students);
+          saveBtn.disabled = false;
+          courseInfo.textContent = `📚 ${courseCode} · ${students.length} students · ${formatDateDisplay(dateStr)}`;
+          courseInfo.classList.remove('hidden');
+
+          // Update warning visibility
+          if (isPastDate(dateStr)) {
+            pastDateWarning.classList.remove('hidden');
+          } else {
+            pastDateWarning.classList.add('hidden');
+          }
+
+        } catch (error) {
+          console.error('Load attendance error:', error);
+          studentListInner.innerHTML = `<div class="text-center py-10 text-error">Error loading attendance: ${error.message}</div>`;
+          saveBtn.disabled = true;
+          showMessage('Failed to load attendance. Check console.', true);
+        }
+      }
+
+      // ─── Render student list ─────────────────────────────────
+      function renderStudentList(studentArray) {
+        if (!studentArray || studentArray.length === 0) {
+          studentListInner.innerHTML = `<div class="text-center py-10 text-on-surface-variant">No students to display.</div>`;
+          return;
+        }
+
+        let html = `
+          <div class="hidden md:grid grid-cols-12 gap-4 px-4 py-3 bg-surface-container-low rounded-lg mb-2 text-xs font-label uppercase tracking-wider text-on-surface-variant font-bold">
+            <div class="col-span-5">Student Name &amp; ID</div>
+            <div class="col-span-3">Programme</div>
+            <div class="col-span-4 text-center">Attendance status</div>
+          </div>
+          <div class="space-y-3 md:space-y-1">
+        `;
+
+        studentArray.forEach((s) => {
+          const initials = s.fullName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+          const isPresent = statusMap[s._id] === 'present';
+          const isAbsent = statusMap[s._id] === 'absent';
+          const isExcused = statusMap[s._id] === 'excused';
+
+          html += `
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start md:items-center px-4 py-4 rounded-xl hover:bg-surface-container-high transition-all" data-student-id="${s._id}">
+              <div class="md:col-span-5 flex items-center gap-3 min-w-0">
+                <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center font-bold shrink-0">${initials}</div>
+                <div class="min-w-0">
+                  <span class="font-semibold text-on-surface block truncate">${s.fullName}</span>
+                  <span class="text-xs text-on-surface-variant">ID: ${s.matricNumber}</span>
+                </div>
+              </div>
+              <div class="md:col-span-3 text-sm text-on-surface-variant">
+                <span class="md:hidden font-semibold text-on-surface">Programme: </span>${s.department || '—'}
+              </div>
+              <div class="md:col-span-4 flex flex-col sm:flex-row md:justify-center gap-2">
+                <button class="status-btn present-btn px-4 sm:px-5 py-2 rounded-full text-sm font-bold flex items-center justify-center gap-1 ${isPresent ? 'active-present' : 'inactive'}" data-student="${s._id}" data-status="present">
+                  <span class="material-symbols-outlined text-lg">check_circle</span> Present
+                </button>
+                <button class="status-btn absent-btn px-4 sm:px-5 py-2 rounded-full text-sm font-bold flex items-center justify-center gap-1 ${isAbsent ? 'active-absent' : 'inactive'}" data-student="${s._id}" data-status="absent">
+                  <span class="material-symbols-outlined text-lg">cancel</span> Absent
+                </button>
+                <button class="status-btn excused-btn px-4 sm:px-5 py-2 rounded-full text-sm font-bold flex items-center justify-center gap-1 ${isExcused ? 'active-excused' : 'inactive'}" data-student="${s._id}" data-status="excused">
+                  <span class="material-symbols-outlined text-lg">info</span> Excused
+                </button>
+              </div>
+            </div>
+          `;
+        });
+
+        html += `</div>`;
+        studentListInner.innerHTML = html;
+
+        // Attach event listeners
+        document.querySelectorAll('.status-btn').forEach(btn => {
+          btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const studentId = this.dataset.student;
+            const newStatus = this.dataset.status;
+            if (!studentId || !newStatus) return;
+
+            statusMap[studentId] = newStatus;
+
+            const row = this.closest('[data-student-id]');
+            if (!row) return;
+            const btns = row.querySelectorAll('.status-btn');
+            btns.forEach(b => {
+              b.classList.remove('active-present', 'active-absent', 'active-excused');
+              b.classList.add('inactive');
+            });
+            if (newStatus === 'present') {
+              this.classList.add('active-present');
+              this.classList.remove('inactive');
+            } else if (newStatus === 'absent') {
+              this.classList.add('active-absent');
+              this.classList.remove('inactive');
+            } else if (newStatus === 'excused') {
+              this.classList.add('active-excused');
+              this.classList.remove('inactive');
+            }
+          });
+        });
+      }
+
+      // ─── Save attendance ──────────────────────────────────────
+      async function saveAttendance() {
+        if (!currentCourse || !currentDate) {
+          showMessage('Please select a course and date.', true);
+          return;
+        }
+        const records = students.map(s => ({
+          studentId: s._id,
+          status: statusMap[s._id] || 'absent',
+        }));
+        if (records.length === 0) {
+          showMessage('No students to mark.', true);
+          return;
+        }
+
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<span class="animate-pulse">Saving…</span>';
+        hideMessage();
+
+        try {
+          const res = await attendanceService.markAttendance(currentCourse, records, currentDate);
+          if (res.success) {
+            showMessage(`✅ Attendance saved successfully! (${records.length} students)`, false);
+            await loadAttendance(currentCourse, currentDate);
+          } else {
+            showMessage(res.message || 'Failed to save attendance.', true);
+          }
+        } catch (error) {
+          showMessage(error.message || 'Error saving attendance.', true);
+          console.error('Save error:', error);
+        } finally {
+          saveBtn.disabled = false;
+          saveBtn.innerHTML = '<span class="material-symbols-outlined">save</span> Save Attendance';
+        }
+      }
+
+      // ─── Event listeners ──────────────────────────────────────
+      refreshBtn.addEventListener('click', function() {
+        if (currentCourse && currentDate) {
+          loadAttendance(currentCourse, currentDate);
+        } else {
+          showMessage('Please select a course and date.', true);
+        }
+      });
+
+      saveBtn.addEventListener('click', saveAttendance);
+
+      document.getElementById('logoutBtn').addEventListener('click', async () => {
+        try { await userService.logout(); } catch (e) {}
+        apiService.setToken(null);
+        window.location.href = 'index.html';
+      });
+
+      // ─── Init ──────────────────────────────────────────────────
+      if (token) {
+        loadLecturer();
+      }
     </script>
   </body>
 </html>

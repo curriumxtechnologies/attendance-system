@@ -18,7 +18,7 @@
       rel="stylesheet"
     />
 
-    <!-- Tailwind config (preserved) -->
+    <!-- Tailwind config -->
     <script id="tailwind-config">
       tailwind.config = {
         darkMode: "class",
@@ -93,24 +93,16 @@
       body {
         font-family: "Inter", sans-serif;
       }
-      h1,
-      h2,
-      h3,
-      .display-font {
+      h1, h2, h3, .display-font {
         font-family: "Manrope", sans-serif;
       }
       .material-symbols-outlined {
-        font-variation-settings:
-          "FILL" 0,
-          "wght" 400,
-          "GRAD" 0,
-          "opsz" 24;
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
         vertical-align: middle;
       }
       .soft-shadow {
         box-shadow: 0 12px 32px -4px rgba(27, 27, 28, 0.06);
       }
-      /* subtle background interest (optional) */
       .bg-subtle-pattern {
         background-color: #fcf9f8;
         background-image: radial-gradient(
@@ -119,14 +111,18 @@
         );
         background-size: 24px 24px;
       }
+      .modal-overlay {
+        background: rgba(0,0,0,0.5);
+        backdrop-filter: blur(4px);
+      }
     </style>
   </head>
   <body
-    class="bg-background text-on-surface min-h-screen flex items-center justify-center p-4 sm:p-6 bg-subtle-pattern"
+    class="bg-background text-on-surface min-h-screen flex items-center justify-center p-4 sm:p-6 bg-subtle-pattern relative"
   >
-    <!-- centered card – everything in one container, no split -->
+
+    <!-- Main login card -->
     <div class="w-full max-w-md">
-      <!-- main card (exactly the form container from the right side, now full width) -->
       <div
         class="bg-surface-container-lowest rounded-[2rem] p-6 sm:p-8 soft-shadow border border-outline-variant/10"
       >
@@ -144,44 +140,37 @@
           </p>
         </div>
 
-        <!-- form (identical to original, fully functional) -->
         <form id="loginForm" class="space-y-5">
           <div>
-            <label
-              class="block text-sm font-semibold text-on-surface mb-2"
-              for="email"
-              >Email Address</label
-            >
+            <label class="block text-sm font-semibold text-on-surface mb-2" for="email"
+              >Email Address</label>
             <div class="relative">
               <span
                 class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg"
-                >mail</span
-              >
+                >mail</span>
               <input
                 id="email"
                 type="email"
                 class="w-full bg-surface-container-high border-none rounded-xl py-3.5 pl-12 pr-4 text-on-surface font-medium focus:ring-2 focus:ring-primary"
                 placeholder="Enter lecturer email"
+                required
               />
             </div>
           </div>
 
           <div>
-            <label
-              class="block text-sm font-semibold text-on-surface mb-2"
-              for="password"
-              >Password</label
-            >
+            <label class="block text-sm font-semibold text-on-surface mb-2" for="password"
+              >Password</label>
             <div class="relative">
               <span
                 class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-lg"
-                >lock</span
-              >
+                >lock</span>
               <input
                 id="password"
                 type="password"
                 class="w-full bg-surface-container-high border-none rounded-xl py-3.5 pl-12 pr-14 text-on-surface font-medium focus:ring-2 focus:ring-primary"
                 placeholder="Enter password"
+                required
               />
               <button
                 id="togglePasswordBtn"
@@ -190,8 +179,7 @@
                 aria-label="Toggle password visibility"
               >
                 <span id="togglePasswordIcon" class="material-symbols-outlined"
-                  >visibility</span
-                >
+                  >visibility</span>
               </button>
             </div>
           </div>
@@ -206,85 +194,236 @@
             </label>
           </div>
 
-          <a
-            href="dashboard.html"
+          <button
+            type="submit"
+            id="loginBtn"
             class="w-full bg-primary text-on-primary py-3.5 rounded-xl font-semibold flex items-center justify-center gap-3 hover:bg-primary-container transition-all soft-shadow"
           >
             <span class="material-symbols-outlined">login</span>
             Sign In
-          </a>
+          </button>
 
           <!-- dynamic message area -->
-          <p
-            id="loginMessage"
-            class="hidden text-sm font-medium rounded-lg px-4 py-3"
-          ></p>
+          <p id="loginMessage" class="hidden text-sm font-medium rounded-lg px-4 py-3"></p>
         </form>
       </div>
     </div>
 
-    <!-- JavaScript (identical behaviour, fixed toggle & validation) -->
-    <script>
-      (function () {
-        const form = document.getElementById("loginForm");
-        const email = document.getElementById("email");
-        const password = document.getElementById("password");
-        const message = document.getElementById("loginMessage");
-        const toggleBtn = document.getElementById("togglePasswordBtn");
-        const toggleIcon = document.getElementById("togglePasswordIcon");
+    <!-- OTP Modal (hidden by default) -->
+    <div
+      id="otpModal"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-overlay hidden"
+    >
+      <div class="bg-surface-container-lowest rounded-2xl p-6 max-w-sm w-full soft-shadow">
+        <h3 class="text-xl font-headline font-bold mb-2">Two‑Factor Authentication</h3>
+        <p class="text-sm text-on-surface-variant mb-4">
+          An OTP has been sent to your email. Please enter it below.
+        </p>
+        <input
+          id="otpInput"
+          type="text"
+          maxlength="6"
+          class="w-full bg-surface-container-high border-none rounded-xl py-3 px-4 text-center text-2xl tracking-widest font-mono focus:ring-2 focus:ring-primary"
+          placeholder="000000"
+        />
+        <div class="flex gap-3 mt-4">
+          <button
+            id="otpVerifyBtn"
+            class="flex-1 bg-primary text-on-primary py-2.5 rounded-xl font-semibold hover:bg-primary-container transition-all"
+          >
+            Verify
+          </button>
+          <button
+            id="otpCancelBtn"
+            class="flex-1 bg-outline-variant/20 text-on-surface py-2.5 rounded-xl font-semibold hover:bg-outline-variant/30 transition-all"
+          >
+            Cancel
+          </button>
+        </div>
+        <p id="otpMessage" class="text-sm mt-3 text-center hidden"></p>
+      </div>
+    </div>
 
-        function hideMessage() {
-          message.classList.add("hidden");
-          message.classList.remove(
-            "bg-error-container",
-            "text-on-error-container",
-            "bg-primary-fixed",
-            "text-on-primary-fixed-variant",
-          );
-          message.textContent = "";
+    <!-- JavaScript Module -->
+    <script type="importmap">
+      {
+        "imports": {
+          "./js/": "./js/"
+        }
+      }
+    </script>
+    <script type="module">
+      // ✅ Correct imports – files are directly under /js/
+      import userService from './js/userService.js';
+      import apiService from './js/apiService.js';
+
+      // DOM elements
+      const form = document.getElementById('loginForm');
+      const email = document.getElementById('email');
+      const password = document.getElementById('password');
+      const message = document.getElementById('loginMessage');
+      const loginBtn = document.getElementById('loginBtn');
+
+      // OTP modal elements
+      const otpModal = document.getElementById('otpModal');
+      const otpInput = document.getElementById('otpInput');
+      const otpVerifyBtn = document.getElementById('otpVerifyBtn');
+      const otpCancelBtn = document.getElementById('otpCancelBtn');
+      const otpMessage = document.getElementById('otpMessage');
+
+      // Toggle password visibility
+      const toggleBtn = document.getElementById('togglePasswordBtn');
+      const toggleIcon = document.getElementById('togglePasswordIcon');
+      toggleBtn.addEventListener('click', () => {
+        const isPassword = password.type === 'password';
+        password.type = isPassword ? 'text' : 'password';
+        toggleIcon.textContent = isPassword ? 'visibility_off' : 'visibility';
+      });
+
+      // Helper: show message
+      function showMessage(text, isError = true) {
+        message.classList.remove('hidden', 'bg-primary-fixed', 'text-on-primary-fixed-variant', 'bg-error-container', 'text-on-error-container');
+        if (isError) {
+          message.classList.add('bg-error-container', 'text-on-error-container');
+        } else {
+          message.classList.add('bg-primary-fixed', 'text-on-primary-fixed-variant');
+        }
+        message.textContent = text;
+      }
+
+      function hideMessage() {
+        message.classList.add('hidden');
+        message.textContent = '';
+      }
+
+      // Login flow state
+      let tempToken = null;
+
+      // Handle form submission
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        hideMessage();
+        const emailVal = email.value.trim();
+        const passVal = password.value.trim();
+
+        if (!emailVal || !passVal) {
+          showMessage('Please enter your email address and password.', true);
+          return;
+        }
+        if (!emailVal.includes('@')) {
+          showMessage('Please enter a valid email address.', true);
+          return;
         }
 
-        toggleBtn.addEventListener("click", function () {
-          const isPassword = password.type === "password";
-          password.type = isPassword ? "text" : "password";
-          toggleIcon.textContent = isPassword ? "visibility_off" : "visibility";
-        });
+        // Disable button and show loading
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = '<span class="animate-pulse">Loading...</span>';
 
-        form.addEventListener("submit", function (e) {
-          e.preventDefault();
-          hideMessage();
-          message.classList.remove("hidden");
+        try {
+          const response = await userService.login(emailVal, passVal);
 
-          if (!email.value.trim() || !password.value.trim()) {
-            message.textContent =
-              "Please enter your email address and password.";
-            message.classList.add(
-              "bg-error-container",
-              "text-on-error-container",
-            );
-            return;
+          if (response.success && response.token) {
+            // Normal login (no 2FA)
+            apiService.setToken(response.token);
+            showMessage('Login successful. Redirecting...', false);
+            setTimeout(() => {
+              window.location.href = 'dashboard.html';
+            }, 1000);
+          } else if (response.success && response.tempToken) {
+            // 2FA required – show OTP modal
+            tempToken = response.tempToken;
+            otpModal.classList.remove('hidden');
+            otpInput.value = '';
+            otpInput.focus();
+            otpMessage.classList.add('hidden');
+            otpMessage.textContent = '';
+            // enable login button again
+            loginBtn.disabled = false;
+            loginBtn.innerHTML = '<span class="material-symbols-outlined">login</span> Sign In';
+          } else {
+            showMessage('Unexpected response from server.', true);
           }
+        } catch (error) {
+          showMessage(error.message || 'Login failed. Please try again.', true);
+          loginBtn.disabled = false;
+          loginBtn.innerHTML = '<span class="material-symbols-outlined">login</span> Sign In';
+        }
+      });
 
-          if (!email.value.includes("@")) {
-            message.textContent = "Please enter a valid email address.";
-            message.classList.add(
-              "bg-error-container",
-              "text-on-error-container",
-            );
-            return;
+      // OTP verification
+      otpVerifyBtn.addEventListener('click', async () => {
+        const otp = otpInput.value.trim();
+        if (!otp || otp.length !== 6) {
+          otpMessage.classList.remove('hidden');
+          otpMessage.textContent = 'Please enter a valid 6‑digit OTP.';
+          otpMessage.className = 'text-sm mt-3 text-center text-error';
+          return;
+        }
+
+        otpVerifyBtn.disabled = true;
+        otpVerifyBtn.textContent = 'Verifying...';
+
+        try {
+          const emailVal = email.value.trim();
+          const response = await userService.verifyOTP({
+            email: emailVal,
+            otp,
+            purpose: 'login-2fa',
+            tempToken,
+          });
+
+          if (response.success && response.token) {
+            apiService.setToken(response.token);
+            otpModal.classList.add('hidden');
+            showMessage('Login successful. Redirecting...', false);
+            setTimeout(() => {
+              window.location.href = 'dashboard.html';
+            }, 1000);
+          } else {
+            otpMessage.classList.remove('hidden');
+            otpMessage.textContent = response.message || 'OTP verification failed.';
+            otpMessage.className = 'text-sm mt-3 text-center text-error';
+            otpVerifyBtn.disabled = false;
+            otpVerifyBtn.textContent = 'Verify';
           }
+        } catch (error) {
+          otpMessage.classList.remove('hidden');
+          otpMessage.textContent = error.message || 'OTP verification failed.';
+          otpMessage.className = 'text-sm mt-3 text-center text-error';
+          otpVerifyBtn.disabled = false;
+          otpVerifyBtn.textContent = 'Verify';
+        }
+      });
 
-          message.textContent = "Login successful. Redirecting to dashboard...";
-          message.classList.add(
-            "bg-primary-fixed",
-            "text-on-primary-fixed-variant",
-          );
+      // Cancel OTP
+      otpCancelBtn.addEventListener('click', () => {
+        otpModal.classList.add('hidden');
+        tempToken = null;
+        loginBtn.disabled = false;
+        loginBtn.innerHTML = '<span class="material-symbols-outlined">login</span> Sign In';
+        hideMessage();
+      });
 
-          setTimeout(() => {
-            // change to actual dashboard url when needed
-            window.location.href = "dashboard.html";
-          }, 1000);
-        });
+      // Close modal on overlay click
+      otpModal.addEventListener('click', (e) => {
+        if (e.target === otpModal) {
+          otpCancelBtn.click();
+        }
+      });
+
+      // Enter key in OTP input
+      otpInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          otpVerifyBtn.click();
+        }
+      });
+
+      // Auto‑redirect if already logged in
+      (function checkAuth() {
+        const token = apiService.getToken();
+        if (token) {
+          window.location.href = 'dashboard.html';
+        }
       })();
     </script>
   </body>
